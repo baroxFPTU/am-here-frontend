@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
-import Footer from 'components/Common/Footer';
+import Footer from 'components/common/Footer';
 import { Outlet } from 'react-router-dom';
-import Header from '../Common/Header/component';
+import Header from '../common/Header/component';
 
 const MainLayout = ({ children }) => {
   return (

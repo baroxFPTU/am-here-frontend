@@ -22,12 +22,28 @@ import { Link } from 'react-router-dom';
 import Logo from '../Logo';
 
 const drawerWidth = 240;
+
 const navItems = [
-  'Trang chu',
-  'Ve chung toi',
-  'Phong chat',
-  'Tri lieu voi bac si',
-  'Lam nguoi lang nghe',
+  {
+    label: 'Trang chu',
+    href: '/',
+  },
+  {
+    label: 'Ve chung toi',
+    href: '/about-us',
+  },
+  {
+    label: 'Phong chat',
+    href: '/chat',
+  },
+  {
+    label: 'Tri lieu voi bac si',
+    href: '/take-care',
+  },
+  {
+    label: 'Lam nguoi lang nghe',
+    href: '/abc',
+  },
 ];
 
 const Header = () => {
@@ -45,9 +61,9 @@ const Header = () => {
       <Divider />
       <List>
         {navItems.map((item) => (
-          <ListItem key={item} disablePadding>
+          <ListItem key={item.label} disablePadding>
             <ListItemButton sx={{ textAlign: 'center' }}>
-              <ListItemText primary={item} />
+              <ListItemText primary={item.label} />
             </ListItemButton>
           </ListItem>
         ))}
@@ -69,8 +85,8 @@ const Header = () => {
             <Stack direction='row' alignItems='center'>
               <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                 {navItems.map((item) => (
-                  <Button key={item} sx={{ color: '#333' }}>
-                    {item}
+                  <Button key={item} sx={{ color: '#333' }} href={item.href}>
+                    {item.label}
                   </Button>
                 ))}
               </Box>
