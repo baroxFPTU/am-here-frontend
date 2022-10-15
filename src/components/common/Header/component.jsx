@@ -84,8 +84,8 @@ const Header = () => {
             </Link>
             <Stack direction='row' alignItems='center'>
               <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-                {navItems.map((item) => (
-                  <Button key={item} sx={{ color: '#333' }}>
+                {navItems.map((item, index) => (
+                  <Button key={index} sx={{ color: '#333' }}>
                     <Link to={item.href}>{item.label}</Link>
                   </Button>
                 ))}

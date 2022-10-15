@@ -2,36 +2,66 @@ import React, { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 import styled from 'styled-components';
 import { Box, Button, Container as MuContainer } from '@mui/material';
+import axios from 'axios';
 
 import Contacts from 'components/chat/Contacts';
 import ChatInput from 'components/chat/ChatInput';
 import ChatListMessage from 'components/chat/ChatListMessage';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUser } from 'features/auth/authSlice';
+import { chatActions, selectContacts, selectCurrentReceiver } from 'features/chat/chatSlice';
 
 const host = 'http://10.1.106.147:3000';
 const currentId = localStorage.getItem('userId');
 
 export default function Chat() {
   const socket = useRef();
+  const dispatch = useDispatch();
+  const user = useSelector(selectUser);
+  const contacts = useSelector(selectContacts);
+  const currentReceiver = useSelector(selectCurrentReceiver);
   const [messages, setMessages] = useState([]);
   const [isStart, setIsStart] = useState(false);
 
   useEffect(() => {
+    (async () => {
+      try {
+        const response = await axios.get('http://10.1.106.147:3000/api/user');
+        const filteredData = response.data.filter((contact) => contact._id !== user.id);
+        const currentReceiver = filteredData[0];
+        dispatch(
+          chatActions.setData({
+            contacts: filteredData,
+            currentReceiver: filteredData[0],
+          })
+        );
+
+        const conversationResponse = await axios.post(`${host}/api/message/getmsg`, {
+          sender: user.id,
+          receiver: currentReceiver._id,
+        });
+        console.log({ messages: conversationResponse.data });
+        setMessages(conversationResponse.data);
+      } catch (error) {
+        throw new Error(error);
+      }
+    })();
     if (isStart) {
       socket.current = io(host);
 
-      socket.current.emit('add-user', currentId);
+      socket.current.emit('add-user', user.id);
       socket.current.on('msg-receive', (data) => {
         console.log({ dataReceived: data });
         pushMessageToState(data);
       });
     }
-  }, [isStart]);
+  }, [isStart, user, dispatch]);
 
   const handleSendMessage = (message) => {
     const data = {
-      receiver: localStorage.getItem('receiver'),
-      sender: currentId,
-      text: message,
+      receiver: currentReceiver._id,
+      sender: user.id,
+      message: message,
     };
 
     socket.current.emit('send-msg', data);
@@ -48,14 +78,14 @@ export default function Chat() {
   return (
     <MuContainer>
       <Box sx={{ display: 'grid', gridTemplateColumns: '30% 1fr', flex: 1 }}>
-        <Contacts />
+        <Contacts contacts={contacts} />
         <ChatContainer>
           <div className='chat-header'>
             <div className='header-contact'></div>
-            <h5>User name</h5>
+            <h5>{currentReceiver?.nickname}</h5>
           </div>
-          <ChatListMessage messages={messages} />
-          {!isStart && <Button onClick={handleStartConversation}>Bat dau cuoc tro chuyen</Button>}
+          <ChatListMessage messages={messages} currentId={user.id} />
+          {!isStart && <Button onClick={handleStartConversation}>Bắt đầu cuộc trò chuyện</Button>}
           {isStart && <ChatInput onSendMessage={handleSendMessage} />}
         </ChatContainer>
       </Box>

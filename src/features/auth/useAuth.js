@@ -29,14 +29,7 @@ function useAuth(callback) {
   useEffect(() => {
     const unregistered = onAuthStateChanged(auth, (user) => {
       if (!user) return;
-
-      const userData = {
-        uid: user.uid,
-        displayName: user.displayName,
-        photoURL: user.photoURL,
-        email: user.email,
-      };
-      setUser(userData);
+      setUser(user);
     });
 
     return () => {

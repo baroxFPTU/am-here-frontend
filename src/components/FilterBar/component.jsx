@@ -5,6 +5,10 @@ import SelectField from 'components/SelectField';
 const FilterBar = ({ label }) => {
   const genderOptions = [
     {
+      label: 'Chon giới tính',
+      value: undefined,
+    },
+    {
       label: 'Nam',
       value: 'male',
     },
@@ -15,6 +19,10 @@ const FilterBar = ({ label }) => {
   ];
 
   const categoryOptions = [
+    {
+      label: 'Chon kieu nguoi',
+      value: undefined,
+    },
     {
       label: 'Nguoi nghe',
       value: 'normal',
@@ -30,6 +38,10 @@ const FilterBar = ({ label }) => {
   ];
 
   const regionOptions = [
+    {
+      label: 'Chon khu vực',
+      value: undefined,
+    },
     {
       label: 'Ha Noi',
       value: 'hanoi',
@@ -48,12 +60,12 @@ const FilterBar = ({ label }) => {
     <Box>
       <Stack direction='row' justifyContent='space-between'>
         <Box className='FilterFields'>
-          <SelectField id='gender' label='Gioi tinh' options={genderOptions} />
-          <SelectField id='category' label='The loai' options={categoryOptions} />
-          <SelectField id='region' label='Khu vuc' options={regionOptions} />
+          <SelectField id='gender' label='Giới tính' options={genderOptions} />
+          <SelectField id='category' label='Thể loại' options={categoryOptions} />
+          <SelectField id='region' label='Khu vực' options={regionOptions} />
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center' }} className='Search'>
-          <TextField id='standard-basic' label='Tim kiem nguoi nghe' variant='standard' />
+          <TextField id='standard-basic' label='Tìm kiếm người nghe' variant='standard' />
           <Button variant='contained'>
             <SearchIcon />
           </Button>

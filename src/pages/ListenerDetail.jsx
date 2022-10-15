@@ -142,8 +142,8 @@ const ListenerDetail = ({ listener }) => {
         <Grid item sx={12} md={8}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <Tabs value={value} onChange={handleChange} aria-label='basic tabs example'>
-              <Tab label='Thong tin co ban' {...a11yProps(0)} />
-              <Tab label='Phan hoi' {...a11yProps(1)} />
+              <Tab label='Thông tin cơ bản' {...a11yProps(0)} />
+              <Tab label='Phản hồi' {...a11yProps(1)} />
             </Tabs>
           </Box>
           <TabPanel value={value} index={0}>

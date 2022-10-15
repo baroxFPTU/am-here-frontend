@@ -7,8 +7,8 @@ const ListenerList = ({ listeners }) => {
     <>
       <Grid container spacing={4}>
         {listeners.map((listener, index) => (
-          <Grid item sx={12} md={6} lg={4}>
-            <ListenerCard key={index} />
+          <Grid item xs={12} md={6} lg={4} key={index}>
+            <ListenerCard />
           </Grid>
         ))}
       </Grid>
