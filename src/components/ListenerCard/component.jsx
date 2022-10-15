@@ -1,15 +1,5 @@
 import StarOutlinedIcon from '@mui/icons-material/StarOutlined';
-import {
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Chip,
-  IconButton,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Card, CardContent, CardMedia, Chip, Typography } from '@mui/material';
 import { FiSend } from 'react-icons/fi';
 
 const ListenerCard = () => {
