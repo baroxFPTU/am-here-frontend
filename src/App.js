@@ -1,3 +1,4 @@
+import ChatLayout from "components/layout/ChatLayout";
 import Chat from "pages/Chat";
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -16,7 +17,12 @@ function App() {
           <Route path="/" element={<MainLayout />}>
             <Route path="" element={<Home />} />
           </Route>
-          <Route path="/chat" element={<Chat />} />
+
+          <Route path="/chat" element={<ChatLayout />}>
+            <Route path="" element={<Chat />} />
+          </Route>
+
+          {/* <Route path="/chat" element={<Chat />} /> */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
