@@ -9,8 +9,8 @@ import {
   Typography,
 } from '@mui/material';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Logo from '../Logo';
-import * as Styled from './styles';
 
 function generate(element) {
   return [0, 1, 2].map((value) =>
@@ -70,8 +70,8 @@ const Footer = () => {
         <Divider light style={{ margin: '20px 0' }} />
         <Stack direction='row' alignItems='center' justifyContent='space-between'>
           <div className=''>
-            <a href=''>Ban quyen thuoc ve</a>
-            <a href=''>AMHERE</a>
+            <Link href='#'>Ban quyen thuoc ve</Link>
+            <Link href='#'>AMHERE</Link>
           </div>
           <div className=''>
             <span>© 2022 Copyright</span>

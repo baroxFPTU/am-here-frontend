@@ -1,6 +1,6 @@
 import { Container } from '@mui/material';
 import Banner from 'components/Banner';
-import Section from 'components/Common/Section';
+import Section from 'components/common/Section';
 import FilterBar from 'components/FilterBar';
 import ListenerList from 'components/ListenerList';
 import React from 'react';

@@ -1,25 +1,37 @@
-import React from "react";
-import styled from "styled-components";
-import { IoSend } from "react-icons/io5";
-import { BsEmojiSmileFill } from "react-icons/bs";
-import { Button, Input } from "@mui/material";
+import { Button, Input } from '@mui/material';
+import { useRef } from 'react';
+import { BsEmojiSmileFill } from 'react-icons/bs';
+import { IoSend } from 'react-icons/io5';
+import styled from 'styled-components';
 
-function ChatInput() {
+function ChatInput({ onSendMessage }) {
+  const messageRef = useRef('');
+
+  const handleClickSendMessage = (e) => {
+    e.preventDefault();
+    onSendMessage(messageRef.current.value);
+    messageRef.current.value = '';
+  };
+
   return (
     <Container>
-      <div className="button-container">
-        <div className="emoji">
+      <div className='button-container'>
+        <div className='emoji'>
           <BsEmojiSmileFill />
           {/* {showEmojiPicker && <Picker onEmojiClick={handEmojiClick} />} */}
         </div>
       </div>
-      <form className="input-container">
+      <form className='input-container' onSubmit={handleClickSendMessage}>
         <Input
-          type="text"
-          placeholder="type your message here"
-          sx={{ width: "100%" }}
+          type='text'
+          placeholder='type your message here'
+          sx={{ width: '100%' }}
+          onSubmit={(e) => {
+            e.preventDefault();
+          }}
+          inputRef={messageRef}
         />
-        <Button type="submit" variant="contained">
+        <Button variant='contained' onClick={handleClickSendMessage}>
           <IoSend />
         </Button>
       </form>
@@ -57,7 +69,6 @@ const Container = styled.div`
   }
   .input-container {
     width: 100%;
-    height: 130%;
     border-radius: 2rem;
     display: flex;
     align-items: center;
