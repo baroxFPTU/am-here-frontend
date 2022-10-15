@@ -1,22 +1,7 @@
 import { Box } from '@mui/material';
 import ChatMessage from './ChatMessage';
 
-const messageExample = {
-  receiver: 'abc.123',
-  sender: 'xyz.xyz',
-  text: 'Hello',
-  createdAt: Date.now(),
-};
-
-const messageExampleSender = {
-  receiver: 'xyz.123',
-  sender: 'abc.123',
-  text: 'Hello',
-  createdAt: Date.now(),
-};
-
-const ChatListMessage = ({ messages }) => {
-  const currentId = 'abc.123';
+const ChatListMessage = ({ messages, currentId }) => {
   return (
     <Box
       sx={{
@@ -27,10 +12,7 @@ const ChatListMessage = ({ messages }) => {
       }}
     >
       {messages.map((message, index) => (
-        <ChatMessage
-          message={message}
-          isSender={Boolean(localStorage.getItem('userId') === message.sender)}
-        />
+        <ChatMessage key={index} data={message} isSender={Boolean(currentId === message.sender)} />
       ))}
     </Box>
   );

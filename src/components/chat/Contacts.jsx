@@ -1,36 +1,30 @@
-import React from "react";
-import styled from "styled-components";
+import { chatActions, selectCurrentReceiver } from 'features/chat/chatSlice';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import styled from 'styled-components';
+import Contact from './Contact';
 
-export default function Contacts() {
+export default function Contacts({ contacts }) {
+  const dispatch = useDispatch();
+  const currentReceiver = useSelector(selectCurrentReceiver);
+  const handleChangeContactSelect = (contactId) => {
+    dispatch(chatActions.setCurrentReceiver(contactId));
+  };
+
   return (
     <Container>
-      <div className="contacts-header">
+      <div className='contacts-header'>
         <h5>Chat</h5>
       </div>
-      <div className="contacts">
-        <div className="contact selected">
-          <div className="contact_logo"></div>
-          <div className="contact_user">
-            <h4>User name</h4>
-            <p>New message</p>
-          </div>
-        </div>
-
-        <div className="contact">
-          <div className="contact_logo"></div>
-          <div className="contact_user">
-            <h4>User name</h4>
-            <p>New message</p>
-          </div>
-        </div>
-
-        <div className="contact">
-          <div className="contact_logo"></div>
-          <div className="contact_user">
-            <h4>User name</h4>
-            <p>New message</p>
-          </div>
-        </div>
+      <div className='contacts'>
+        {contacts.map((contact) => (
+          <Contact
+            key={contact._id}
+            data={contact}
+            onChangeSelectContact={handleChangeContactSelect}
+            isSelected={Boolean(currentReceiver._id === contact._id)}
+          />
+        ))}
       </div>
     </Container>
   );
