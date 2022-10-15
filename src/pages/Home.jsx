@@ -1,6 +1,5 @@
 import Banner from 'components/Banner';
 import Section from 'components/Common/Section';
-import ListenerCard from 'components/ListenerCard';
 import ListenerList from 'components/ListenerList';
 import React from 'react';
 
