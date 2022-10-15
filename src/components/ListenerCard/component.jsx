@@ -1,6 +1,7 @@
 import StarOutlinedIcon from '@mui/icons-material/StarOutlined';
 import { Box, Button, Card, CardContent, CardMedia, Chip, Typography } from '@mui/material';
 import { FiSend } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 
 const ListenerCard = () => {
   return (
@@ -21,9 +22,11 @@ const ListenerCard = () => {
         }}
       />
       <CardContent sx={{ paddingTop: '120px' }}>
-        <Typography gutterBottom variant='h5' component='div'>
-          Lizard
-        </Typography>
+        <Link to='/listeners/id'>
+          <Typography gutterBottom variant='h5' component='div'>
+            Lizard
+          </Typography>
+        </Link>
         <Box sx={{ display: 'flex', alignItems: 'center' }} className='Rates'>
           <StarOutlinedIcon /> 5.0 (20)
         </Box>

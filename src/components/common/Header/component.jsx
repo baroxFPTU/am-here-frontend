@@ -18,6 +18,7 @@ import {
   Typography,
 } from '@mui/material';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Logo from '../Logo';
 
 const drawerWidth = 240;
@@ -62,7 +63,9 @@ const Header = () => {
           <Container
             sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
           >
-            <Logo />
+            <Link to='/'>
+              <Logo />
+            </Link>
             <Stack direction='row' alignItems='center'>
               <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                 {navItems.map((item) => (
