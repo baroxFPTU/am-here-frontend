@@ -5,7 +5,6 @@ const SelectField = ({ id, label, options }) => {
     <FormControl sx={{ m: 1, minWidth: 120 }} size='small'>
       <InputLabel id={id}>{label}</InputLabel>
       <Select labelId={id} id={id} label={label}>
-        <MenuItem value=''></MenuItem>
         {options &&
           options.map((option, index) => (
             <MenuItem value={option.value} key={index}>

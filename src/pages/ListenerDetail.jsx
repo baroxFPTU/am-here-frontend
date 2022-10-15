@@ -15,19 +15,18 @@ import {
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Scrollbar, Grid as SwiperGrid } from 'swiper';
-import { MdOutlineNavigateNext } from 'react-icons/md';
+import { Grid as SwiperGrid, Navigation } from 'swiper';
 import 'swiper/css/grid';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 //Swiper styles
+import React from 'react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
-import React from 'react';
 
-function TabPanel(props) {
+export function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
   return (
@@ -47,7 +46,7 @@ function TabPanel(props) {
   );
 }
 
-function a11yProps(index) {
+export function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
     'aria-controls': `simple-tabpanel-${index}`,

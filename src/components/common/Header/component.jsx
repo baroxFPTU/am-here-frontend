@@ -25,23 +25,23 @@ const drawerWidth = 240;
 
 const navItems = [
   {
-    label: 'Trang chu',
+    label: 'Trang chủ',
     href: '/',
   },
   {
-    label: 'Ve chung toi',
+    label: 'Về chúng tôi',
     href: '/about-us',
   },
   {
-    label: 'Phong chat',
+    label: 'Phòng chat',
     href: '/chat',
   },
   {
-    label: 'Tri lieu voi bac si',
+    label: 'Trò chuyện với bác sĩ',
     href: '/take-care',
   },
   {
-    label: 'Lam nguoi lang nghe',
+    label: 'Làm người lắng nghe',
     href: '/abc',
   },
 ];
@@ -85,8 +85,8 @@ const Header = () => {
             <Stack direction='row' alignItems='center'>
               <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                 {navItems.map((item) => (
-                  <Button key={item} sx={{ color: '#333' }} href={item.href}>
-                    {item.label}
+                  <Button key={item} sx={{ color: '#333' }}>
+                    <Link to={item.href}>{item.label}</Link>
                   </Button>
                 ))}
               </Box>
