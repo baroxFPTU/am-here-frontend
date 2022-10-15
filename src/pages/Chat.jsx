@@ -37,7 +37,6 @@ export default function Chat() {
     socket.current.emit('send-msg', data);
     pushMessageToState(data);
   };
-  console.log({ messages });
   const pushMessageToState = (messageData) => {
     setMessages((prevList) => [...prevList, messageData]);
   };
