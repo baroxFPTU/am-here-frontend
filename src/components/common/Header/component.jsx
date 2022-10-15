@@ -57,7 +57,7 @@ const Header = () => {
   const container = document.querySelector('#root');
   return (
     <>
-      <AppBar component='nav' style={{ background: '#fff', color: '#333' }}>
+      <AppBar component='nav' style={{ background: '#fff', color: '#333', boxShadow: 'none' }}>
         <Toolbar>
           <Container
             sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
