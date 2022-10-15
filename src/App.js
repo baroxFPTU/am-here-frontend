@@ -9,21 +9,23 @@ import PublicRoute from "./components/routes/PublicRoute";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 
+
 function App() {
   return (
     <>
       <Router>
         <Routes>
-          <Route path="/" element={<MainLayout />}>
-            <Route path="" element={<Home />} />
+          <Route path='/' element={<MainLayout />}>
+            <Route path='' element={<Home />} />
+            <Route path='/listeners/:id' element={<ListenerDetail />} />
           </Route>
-
           <Route path="/chat" element={<ChatLayout />}>
             <Route path="" element={<Chat />} />
           </Route>
 
           {/* <Route path="/chat" element={<Chat />} /> */}
           <Route path="*" element={<NotFound />} />
+
         </Routes>
       </Router>
     </>
