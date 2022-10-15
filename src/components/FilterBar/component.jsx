@@ -1,17 +1,6 @@
-import {
-  Box,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  Stack,
-  TextField,
-} from '@mui/material';
-import SelectField from 'components/SelectField';
-import React from 'react';
 import SearchIcon from '@mui/icons-material/Search';
-import * as Styled from './styles';
+import { Box, Button, Stack, TextField } from '@mui/material';
+import SelectField from 'components/SelectField';
 
 const FilterBar = ({ label }) => {
   const genderOptions = [
@@ -57,16 +46,18 @@ const FilterBar = ({ label }) => {
 
   return (
     <Box>
-      <Stack direction='row'>
-        <SelectField id='gender' label='Gioi tinh' options={genderOptions} />
-        <SelectField id='category' label='The loai' options={categoryOptions} />
-        <SelectField id='region' label='Khu vuc' options={regionOptions} />
-        <div className='Search'>
-          <TextField id='standard-basic' label='Standard' variant='standard' />
+      <Stack direction='row' justifyContent='space-between'>
+        <Box className='FilterFields'>
+          <SelectField id='gender' label='Gioi tinh' options={genderOptions} />
+          <SelectField id='category' label='The loai' options={categoryOptions} />
+          <SelectField id='region' label='Khu vuc' options={regionOptions} />
+        </Box>
+        <Box sx={{ display: 'flex', alignItems: 'center' }} className='Search'>
+          <TextField id='standard-basic' label='Tim kiem nguoi nghe' variant='standard' />
           <Button variant='contained'>
             <SearchIcon />
           </Button>
-        </div>
+        </Box>
       </Stack>
     </Box>
   );
