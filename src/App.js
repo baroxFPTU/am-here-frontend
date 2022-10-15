@@ -2,7 +2,7 @@ import React from 'react';
 import Home from './pages/Home';
 import Chat from 'pages/Chat';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import MainLayout from './components/layout/MainLayout';
+import MainLayout from './components/Layout/MainLayout';
 import NotFound from './pages/NotFound';
 
 function App() {
