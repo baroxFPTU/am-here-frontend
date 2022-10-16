@@ -1,69 +1,91 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 import styled from 'styled-components';
-import { Box, Button, Container as MuContainer } from '@mui/material';
+import { Avatar, Box, Button, Container as MuContainer, Stack } from '@mui/material';
 import axios from 'axios';
 
 import Contacts from 'components/chat/Contacts';
 import ChatInput from 'components/chat/ChatInput';
 import ChatListMessage from 'components/chat/ChatListMessage';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectUser } from 'features/auth/authSlice';
+import { selectCurrentRole, selectUser } from 'features/auth/authSlice';
 import { chatActions, selectContacts, selectCurrentReceiver } from 'features/chat/chatSlice';
+import { ROLE_LISTENER_STRING, ROLE_MEMBER_STRING } from 'app/constant';
+import { useParams } from 'react-router-dom';
 
 const host = 'http://10.1.106.147:3000';
-const currentId = localStorage.getItem('userId');
+
+const StyledButton = styled(Button)`
+  &:hover {
+    background: #e7ebf0 !important;
+    box-shadow: none !important ;
+  }
+`;
 
 export default function Chat() {
+  const params = useParams();
   const socket = useRef();
   const dispatch = useDispatch();
-  const user = useSelector(selectUser);
+  const currentUser = useSelector(selectUser);
   const contacts = useSelector(selectContacts);
+  const currentRole = useSelector(selectCurrentRole);
   const currentReceiver = useSelector(selectCurrentReceiver);
   const [messages, setMessages] = useState([]);
   const [isStart, setIsStart] = useState(false);
-
+  const senderId = currentUser.id;
+  const receiverId = currentReceiver?._id || params.uid;
+  console.log(currentRole);
   useEffect(() => {
     (async () => {
       try {
-        const response = await axios.get('http://10.1.106.147:3000/api/user');
-        const filteredData = response.data.filter((contact) => contact._id !== user.id);
-        const currentReceiver = filteredData[0];
+        const url =
+          currentRole === ROLE_MEMBER_STRING
+            ? `http://10.1.106.147:3000/api/conversation?senderId=${senderId}`
+            : `http://10.1.106.147:3000/api/conversation/listener?receiverId=${senderId}`;
+        const response = await axios.get(url);
+        const currentReceiver = params.uid || response.data[0];
         dispatch(
           chatActions.setData({
-            contacts: filteredData,
-            currentReceiver: filteredData[0],
+            contacts: response.data,
+            currentReceiver: currentReceiver,
           })
         );
 
         const conversationResponse = await axios.post(`${host}/api/message/getmsg`, {
-          sender: user.id,
-          receiver: currentReceiver._id,
+          sender: senderId,
+          receiver: receiverId,
         });
-        console.log({ messages: conversationResponse.data });
         setMessages(conversationResponse.data);
       } catch (error) {
         throw new Error(error);
       }
     })();
-    if (isStart) {
-      socket.current = io(host);
+    socket.current = io(host);
+    socket.current.emit('add-user', senderId);
+    socket.current.on('msg-receive', (data) => {
+      console.log({ dataReceived: data });
+      pushMessageToState(data);
+    });
+  }, [isStart, currentUser, dispatch]);
 
-      socket.current.emit('add-user', user.id);
-      socket.current.on('msg-receive', (data) => {
-        console.log({ dataReceived: data });
-        pushMessageToState(data);
-      });
-    }
-  }, [isStart, user, dispatch]);
+  useEffect(() => {
+    (async () => {
+      if (currentReceiver) {
+        const conversationResponse = await axios.post(`${host}/api/message/getmsg`, {
+          sender: senderId,
+          receiver: receiverId,
+        });
+        setMessages(conversationResponse.data);
+      }
+    })();
+  }, [currentReceiver, currentUser]);
 
   const handleSendMessage = (message) => {
     const data = {
-      receiver: currentReceiver._id,
-      sender: user.id,
+      receiver: receiverId,
+      sender: senderId,
       message: message,
     };
-
     socket.current.emit('send-msg', data);
     pushMessageToState(data);
   };
@@ -77,16 +99,45 @@ export default function Chat() {
 
   return (
     <MuContainer>
-      <Box sx={{ display: 'grid', gridTemplateColumns: '30% 1fr', flex: 1 }}>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: '30% 1fr',
+          flex: 1,
+          borderTopLeftRadius: '10px',
+          borderTopRightRadius: '10px',
+          overflow: 'hidden',
+          marginTop: 5,
+        }}
+      >
         <Contacts contacts={contacts} />
         <ChatContainer>
           <div className='chat-header'>
-            <div className='header-contact'></div>
+            <Avatar />
             <h5>{currentReceiver?.nickname}</h5>
           </div>
-          <ChatListMessage messages={messages} currentId={user.id} />
-          {!isStart && <Button onClick={handleStartConversation}>Bắt đầu cuộc trò chuyện</Button>}
-          {isStart && <ChatInput onSendMessage={handleSendMessage} />}
+          <ChatListMessage messages={messages} currentId={senderId} />
+          {!isStart && currentRole === ROLE_MEMBER_STRING && (
+            <StyledButton
+              onClick={handleStartConversation}
+              variant='contained'
+              size='large'
+              sx={{
+                background: '#fff',
+                color: '#333',
+                margin: '10px',
+                boxShadow: 'none',
+                border: '1px solid #e7ebf0',
+              }}
+            >
+              Bắt đầu cuộc trò chuyện
+            </StyledButton>
+          )}
+          <Stack justifyContent='center' alignItems='center'>
+            {(isStart || currentRole === ROLE_LISTENER_STRING) && (
+              <ChatInput onSendMessage={handleSendMessage} />
+            )}
+          </Stack>
         </ChatContainer>
       </Box>
     </MuContainer>
@@ -96,20 +147,15 @@ export default function Chat() {
 const ChatContainer = styled.div`
   background-color: white;
   display: grid;
-  grid-template-rows: 60px 80vh 60px;
+  grid-template-rows: 60px 74vh 70px;
   .chat-header {
-    height: 60px;
     display: flex;
-    background-color: #cce2f5;
     align-items: center;
     padding: 0 20px;
+    height: 60px;
     gap: 10px;
-    .header-contact {
-      height: 45px;
-      width: 45px;
-      background-color: white;
-      border-radius: 50px;
-    }
+    background-color: #7db4bb;
+    color: #fff;
     h5 {
       font-size: 17px;
       font-weight: 600;

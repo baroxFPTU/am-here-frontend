@@ -3,10 +3,72 @@ import Banner from 'components/Banner';
 import Section from 'components/common/Section';
 import FilterBar from 'components/FilterBar';
 import ListenerList from 'components/ListenerList';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import FilterSideBar from 'components/FilterSideBar';
+import useAuth from 'features/auth/useAuth';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { authActions, selectCurrentRole } from 'features/auth/authSlice';
+
+import axios from 'axios';
+import { ROLE_MEMBER_STRING } from 'app/constant';
 
 const Home = () => {
+  const [listeners, setListeners] = useState([]);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const currentRole = useSelector(selectCurrentRole);
+
+  const updateUser = (user) => {
+    if (!user) return;
+    dispatchUserData(user);
+    navigate('/');
+  };
+
+  const {} = useAuth(updateUser);
+
+  const dispatchUserData = async (userData) => {
+    try {
+      if (!userData) return;
+      const response = await axios.post('http://10.1.106.147:3000/api/user', {
+        nickname: userData.displayName,
+        uid: userData.uid,
+        email: userData.email,
+        active_role: 'listener',
+      });
+      const result = await response.data;
+      dispatch(
+        authActions.login({
+          id: result._id,
+          uid: userData.uid,
+          nickname: result.nickname,
+          photoURL: result.photoURL,
+          email: result.email,
+          active_role: result.active_role,
+        })
+      );
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      console.log(currentRole);
+      if (currentRole === ROLE_MEMBER_STRING) {
+        try {
+          const response = await axios.get(
+            'http://10.1.106.147:3000/api/user/filter/role/listener'
+          );
+
+          setListeners(response.data);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    })();
+  }, [currentRole]);
+
   return (
     <div>
       <Banner />
@@ -14,7 +76,7 @@ const Home = () => {
         <FilterSideBar />
         <Container>
           <FilterBar />
-          <ListenerList listeners={[1, 2, 3, 4, 5, 6, 7, 8, 9]} />
+          <ListenerList listeners={listeners} />
         </Container>
       </Section>
     </div>

@@ -5,24 +5,20 @@ import SelectField from 'components/SelectField';
 const FilterBar = ({ label }) => {
   const genderOptions = [
     {
-      label: 'Chon giới tính',
-      value: undefined,
+      label: 'Nữ',
+      value: 'female',
     },
     {
       label: 'Nam',
       value: 'male',
     },
     {
-      label: 'Nu',
-      value: 'female',
+      label: 'Khác',
+      value: 'others',
     },
   ];
 
   const categoryOptions = [
-    {
-      label: 'Chon kieu nguoi',
-      value: undefined,
-    },
     {
       label: 'Nguoi nghe',
       value: 'normal',
@@ -38,10 +34,6 @@ const FilterBar = ({ label }) => {
   ];
 
   const regionOptions = [
-    {
-      label: 'Chon khu vực',
-      value: undefined,
-    },
     {
       label: 'Ha Noi',
       value: 'hanoi',
@@ -61,7 +53,7 @@ const FilterBar = ({ label }) => {
       <Stack direction='row' justifyContent='space-between'>
         <Box className='FilterFields'>
           <SelectField id='gender' label='Giới tính' options={genderOptions} />
-          <SelectField id='category' label='Thể loại' options={categoryOptions} />
+          <SelectField id='category' label='Lĩnh vực' options={categoryOptions} />
           <SelectField id='region' label='Khu vực' options={regionOptions} />
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center' }} className='Search'>
