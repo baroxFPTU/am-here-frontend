@@ -13,8 +13,6 @@ import { chatActions, selectContacts, selectCurrentReceiver } from 'features/cha
 import { REACT_APP_API_URL, ROLE_LISTENER_STRING, ROLE_MEMBER_STRING } from 'app/constant';
 import { useParams } from 'react-router-dom';
 
-const host = 'http://10.1.106.147:3000';
-
 const StyledButton = styled(Button)`
   &:hover {
     background: #e7ebf0 !important;
@@ -36,7 +34,7 @@ export default function Chat() {
   const receiverId = currentReceiver?._id || params.uid;
   console.log(currentRole);
   useEffect(() => {
-    socket.current = io(host);
+    socket.current = io(REACT_APP_API_URL);
     socket.current.emit('add-user', senderId);
     socket.current.on('msg-receive', (data) => {
       console.log({ dataReceived: data });
@@ -57,7 +55,7 @@ export default function Chat() {
           })
         );
 
-        const conversationResponse = await axios.post(`${host}/api/message/getmsg`, {
+        const conversationResponse = await axios.post(`${REACT_APP_API_URL}/api/message/getmsg`, {
           sender: senderId,
           receiver: receiverId,
         });
@@ -71,7 +69,7 @@ export default function Chat() {
   useEffect(() => {
     (async () => {
       if (currentReceiver) {
-        const conversationResponse = await axios.post(`${host}/api/message/getmsg`, {
+        const conversationResponse = await axios.post(`${REACT_APP_API_URL}/api/message/getmsg`, {
           sender: senderId,
           receiver: receiverId,
         });
