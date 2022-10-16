@@ -10,7 +10,7 @@ import StepLabel from '@mui/material/StepLabel';
 import Typography from '@mui/material/Typography';
 import StepContent from '@mui/material/StepContent';
 
-import { ROLE_LISTENER_STRING, ROLE_MEMBER_STRING } from 'app/constant';
+import { REACT_APP_API_URL, ROLE_LISTENER_STRING, ROLE_MEMBER_STRING } from 'app/constant';
 import SelectCategory from 'components/SelectField/SelectCategory';
 import useAuth from 'features/auth/useAuth';
 import InfoForm from './InfoForm';
@@ -88,7 +88,7 @@ const SignUpForm = () => {
       photoURL: 'https://source.unsplash.com/random',
     });
     dispatch(authActions.setActiveRole(registerData.current.active_role));
-    const response = await axios.post(`${process.env.REACT_APP_API_URL}/user`, {
+    const response = await axios.post(`${REACT_APP_API_URL}/user`, {
       nickname: registerData.current.nickname,
       uid: user.uid,
       email: registerData.current.email,

@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { authActions, selectCurrentRole } from 'features/auth/authSlice';
 
 import axios from 'axios';
-import { ROLE_MEMBER_STRING } from 'app/constant';
+import { REACT_APP_API_URL, ROLE_MEMBER_STRING } from 'app/constant';
 
 const Home = () => {
   const [listeners, setListeners] = useState([]);
@@ -30,7 +30,7 @@ const Home = () => {
   const dispatchUserData = async (userData) => {
     try {
       if (!userData) return;
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/user`, {
+      const response = await axios.post(`${REACT_APP_API_URL}/user`, {
         nickname: userData.displayName,
         uid: userData.uid,
         email: userData.email,
