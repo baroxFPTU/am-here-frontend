@@ -36,6 +36,12 @@ export default function Chat() {
   const receiverId = currentReceiver?._id || params.uid;
   console.log(currentRole);
   useEffect(() => {
+    socket.current = io(host);
+    socket.current.emit('add-user', senderId);
+    socket.current.on('msg-receive', (data) => {
+      console.log({ dataReceived: data });
+      pushMessageToState(data);
+    });
     (async () => {
       try {
         const url =
@@ -60,12 +66,6 @@ export default function Chat() {
         throw new Error(error);
       }
     })();
-    socket.current = io(host);
-    socket.current.emit('add-user', senderId);
-    socket.current.on('msg-receive', (data) => {
-      console.log({ dataReceived: data });
-      pushMessageToState(data);
-    });
   }, [isStart, currentUser, dispatch]);
 
   useEffect(() => {

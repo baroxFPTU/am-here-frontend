@@ -15,6 +15,7 @@ const Login = () => {
 
   const updateUser = (user) => {
     if (!user) return;
+    console.log({ user });
     dispatchUserData(user);
     navigate('/');
   };
@@ -51,13 +52,13 @@ const Login = () => {
   };
 
   const dispatchUserData = async (userData) => {
+    console.log({ userData });
     try {
       if (!userData) return;
       const response = await axios.post('http://10.1.106.147:3000/api/user', {
         nickname: userData.displayName,
         uid: userData.uid,
         email: userData.email,
-        active_role: 'listener',
       });
       const result = await response.data;
       dispatch(

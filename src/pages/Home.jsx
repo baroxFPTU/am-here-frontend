@@ -34,7 +34,7 @@ const Home = () => {
         nickname: userData.displayName,
         uid: userData.uid,
         email: userData.email,
-        active_role: 'listener',
+        active_role: userData.active_role,
       });
       const result = await response.data;
       dispatch(
