@@ -1,15 +1,18 @@
+import { Avatar, Typography } from '@mui/material';
 import React from 'react';
 
 const Contact = ({ data, onChangeSelectContact, isSelected }) => {
   return (
     <div
       className={`contact ${isSelected && 'selected'}`}
-      onClick={() => onChangeSelectContact(data._id)}
+      onClick={() => onChangeSelectContact(data)}
     >
-      <div className='contact_logo'></div>
+      <Avatar />
       <div className='contact_user'>
-        <h4>{data.nickname || 'User'}</h4>
-        {/* <p>New message</p> */}
+        <Typography variant='h6' sx={{ fontSize: '16px' }}>
+          {data.nickname || 'User'}
+        </Typography>
+        <p>New message</p>
       </div>
     </div>
   );

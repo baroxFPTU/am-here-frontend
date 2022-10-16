@@ -7,6 +7,8 @@ import StepContent from '@mui/material/StepContent';
 import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
+import { ROLE_LISTENER_STRING, ROLE_MEMBER_STRING } from 'app/constant';
+import SelectCategory from 'components/SelectField/SelectCategory';
 import * as React from 'react';
 import InfoForm from './InfoForm';
 
@@ -30,11 +32,35 @@ const steps = [
 
 const SignUpForm = () => {
   const [activeStep, setActiveStep] = React.useState(0);
+  const [selectedRole, setSelectedRole] = React.useState(null);
+  const registerData = React.useRef(null);
   const infoFormValues = {
     nickname: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    birthday: null,
+    phone: '',
+    gender: 'female',
   };
 
-  const handleNext = () => {
+  const handleNext = (formValues) => {
+    if (formValues) {
+      registerData.current = {
+        ...formValues,
+      };
+    }
+    console.log({ registerData: registerData.current });
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+  const handleNextWithRole = (role) => {
+    if (role) {
+      registerData.current = {
+        ...registerData.current,
+        active_role: role,
+      };
+    }
+    console.log({ registerData: registerData.current });
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
@@ -45,6 +71,18 @@ const SignUpForm = () => {
   const handleReset = () => {
     setActiveStep(0);
   };
+
+  const memberCategories = [
+    {
+      label: 'Áp lực',
+    },
+    {
+      label: 'Học tập',
+    },
+    {
+      label: 'Cô đơn',
+    },
+  ];
 
   return (
     <Box sx={{ maxWidth: 500, width: '100%' }}>
@@ -60,13 +98,7 @@ const SignUpForm = () => {
           <StepContent>
             <Typography>Chúng mình sẽ cần một số thông tin</Typography>
             <Box sx={{ mb: 2 }}>
-              <InfoForm />
-              <Button variant='contained' onClick={handleNext} sx={{ mt: 1, mr: 1 }}>
-                {activeStep === steps.length - 1 ? 'Hoàn thành' : 'Tiếp tục'}
-              </Button>
-              <Button disabled={activeStep === 0} onClick={handleBack} sx={{ mt: 1, mr: 1 }}>
-                Back
-              </Button>
+              <InfoForm defaultValues={infoFormValues} handleNext={handleNext} />
             </Box>
           </StepContent>
         </Step>
@@ -77,11 +109,24 @@ const SignUpForm = () => {
             <Box sx={{ mb: 2 }}>
               <div>
                 <Stack spacing={2} sx={{ my: 2 }}>
-                  <Button variant='outlined'>Người nói</Button>
-                  <Button variant='outlined'>Người nghe</Button>
+                  <Button variant='outlined' onClick={() => setSelectedRole(ROLE_MEMBER_STRING)}>
+                    Người nói
+                  </Button>
+                  <Button variant='outlined' onClick={() => setSelectedRole(ROLE_LISTENER_STRING)}>
+                    Người nghe
+                  </Button>
                 </Stack>
-                <Button variant='contained' onClick={handleNext} sx={{ mt: 1, mr: 1 }}>
-                  {activeStep === steps.length - 1 ? 'Hoàn thành' : 'Tiếp tục'}
+                <Button
+                  variant='contained'
+                  onClick={() => {
+                    if (selectedRole) {
+                      handleNextWithRole(selectedRole);
+                    }
+                  }}
+                  sx={{ mt: 1, mr: 1 }}
+                  disabled={!selectedRole}
+                >
+                  Tiếp tục
                 </Button>
                 <Button disabled={activeStep === 0} onClick={handleBack} sx={{ mt: 1, mr: 1 }}>
                   Trở lại
@@ -96,14 +141,14 @@ const SignUpForm = () => {
               activeStep === 2 ? <Typography variant='caption'>Last step</Typography> : null
             }
           >
-            {'Thông tin cơ bản'}
+            {selectedRole === ROLE_MEMBER_STRING ? 'Vấn đề tâm lý của bạn' : 'Lĩnh vực của bạn'}
           </StepLabel>
           <StepContent>
-            <Typography>Chúng mình sẽ cần một số thông tin</Typography>
             <Box sx={{ mb: 2 }}>
               <div>
+                <SelectCategory defaultOptions={memberCategories} />
                 <Button variant='contained' onClick={handleNext} sx={{ mt: 1, mr: 1 }}>
-                  {'Tiếp tục'}
+                  {'Hoàn thành'}
                 </Button>
                 <Button disabled={activeStep === 0} onClick={handleBack} sx={{ mt: 1, mr: 1 }}>
                   Trở lại
@@ -115,10 +160,7 @@ const SignUpForm = () => {
       </Stepper>
       {activeStep === steps.length && (
         <Paper square elevation={0} sx={{ p: 3 }}>
-          <Typography>All steps completed - you&apos;re finished</Typography>
-          <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
-            Reset
-          </Button>
+          <Typography>Tài khoản của bạn đã được tạo.</Typography>
         </Paper>
       )}
     </Box>

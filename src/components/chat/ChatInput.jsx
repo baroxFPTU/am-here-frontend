@@ -1,6 +1,6 @@
-import { Button, Input } from '@mui/material';
+import { Box, Button, Input, TextField } from '@mui/material';
 import { useRef } from 'react';
-import { BsEmojiSmileFill } from 'react-icons/bs';
+import { FaRegSmileBeam } from 'react-icons/fa';
 import { IoSend } from 'react-icons/io5';
 import styled from 'styled-components';
 
@@ -15,24 +15,36 @@ function ChatInput({ onSendMessage }) {
 
   return (
     <Container>
-      <div className='button-container'>
-        <div className='emoji'>
-          <BsEmojiSmileFill />
+      <Box
+        className='button-container'
+        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+      >
+        <Button className='emoji' sx={{ width: 50, height: 50 }}>
+          <FaRegSmileBeam />
           {/* {showEmojiPicker && <Picker onEmojiClick={handEmojiClick} />} */}
-        </div>
-      </div>
+        </Button>
+      </Box>
       <form className='input-container' onSubmit={handleClickSendMessage}>
-        <Input
+        <TextField
           type='text'
-          placeholder='type your message here'
+          variant='outlined'
+          placeholder='Nội dung tin nhắn'
+          size='small'
           sx={{ width: '100%' }}
           onSubmit={(e) => {
             e.preventDefault();
           }}
           inputRef={messageRef}
         />
-        <Button variant='contained' onClick={handleClickSendMessage}>
-          <IoSend />
+        <Button
+          variant='contained'
+          onClick={handleClickSendMessage}
+          sx={{
+            boxShadow: 'none',
+            background: '#50a6b1',
+          }}
+        >
+          Gửi
         </Button>
       </form>
     </Container>
@@ -43,12 +55,10 @@ const Container = styled.div`
   height: 100%;
   width: 100%;
   box-sizing: border-box;
-  background-color: #d4d4d4;
+  background-color: #fff;
   display: grid;
-  grid-template-columns: 5% 95%;
+  grid-template-columns: 10% 1fr;
   align-items: center;
-  /* background-color: #080420; */
-  padding: 0 2rem;
   .button-container {
     display: flex;
     align-items: center;
@@ -58,7 +68,7 @@ const Container = styled.div`
       position: relative;
       svg {
         font-size: 1.5rem;
-        color: #ffff00c8;
+        color: #50a6b1;
         cursor: pointer;
       }
       .emoji-picker-react {

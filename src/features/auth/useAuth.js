@@ -9,11 +9,13 @@ import {
 } from 'firebase/auth';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 function useAuth(callback) {
   const dispatch = useDispatch();
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const googleProvider = new GoogleAuthProvider();
   const facebookProvider = new FacebookAuthProvider();
@@ -24,6 +26,7 @@ function useAuth(callback) {
     if (user) {
       callback(user);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   useEffect(() => {
@@ -61,19 +64,23 @@ function useAuth(callback) {
 
   const signInWithGoogle = useCallback(async () => {
     signIn('google');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const signInWithFacebook = useCallback(async () => {
     signIn('facebook');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const signOutBoth = useCallback(async () => {
-    const response = await signOut(auth);
+  const signOutAll = useCallback(async () => {
+    await signOut(auth);
     const action = authActions.logout();
     dispatch(action);
+    navigate('/');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return { user, error, signInWithGoogle, signInWithFacebook, signOut: signOutBoth };
+  return { user, error, signInWithGoogle, signInWithFacebook, signOut: signOutAll };
 }
 
 export default useAuth;

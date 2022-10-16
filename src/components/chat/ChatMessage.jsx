@@ -7,10 +7,14 @@ import { selectUser } from 'features/auth/authSlice';
 const ChatMessage = ({ data, isSender }) => {
   const currentReceiver = useSelector(selectCurrentReceiver);
   const user = useSelector(selectUser);
-  console.log(user);
   return (
     data && (
-      <Stack direction='row' alignItems='center' justifyContent={isSender ? 'end' : 'start'}>
+      <Stack
+        direction='row'
+        alignItems='center'
+        justifyContent={isSender ? 'end' : 'start'}
+        sx={{ my: 2 }}
+      >
         <Box>
           <Typography variant='h3' sx={{ fontSize: '15px', display: 'block', mb: 1 }}>
             {isSender ? user?.nickname : currentReceiver?.nickname || 'User'}
@@ -22,7 +26,6 @@ const ChatMessage = ({ data, isSender }) => {
               padding: '12px 24px',
               color: isSender ? '#fff' : '#333',
               background: isSender ? '#1ea9b3' : '#ddd',
-              width: '100%',
               borderRadius: 2,
             }}
           >

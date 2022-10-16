@@ -3,28 +3,33 @@ import { Box, Button, Card, CardContent, CardMedia, Chip, Typography } from '@mu
 import { FiSend } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
-const ListenerCard = () => {
+const ListenerCard = ({ data }) => {
+  if (!data) return null;
+
   return (
     <Card sx={{ overflow: 'unset', position: 'relative', mt: '48px' }}>
-      <CardMedia
-        component='img'
-        alt='green iguana'
-        height='250'
-        image={'https://source.unsplash.com/random'}
-        sx={{
-          position: 'absolute',
-          top: '-24px',
-          left: '24px',
-          width: '128px',
-          height: '128px',
-          borderRadius: '8px',
-          marginTop: '-12px',
-        }}
-      />
+      <Link to={`/chat/${data._id}`}>
+        <CardMedia
+          component='img'
+          alt='green iguana'
+          height='250'
+          image={'https://source.unsplash.com/random'}
+          sx={{
+            position: 'absolute',
+            top: '-24px',
+            left: '24px',
+            width: '128px',
+            height: '128px',
+            borderRadius: '8px',
+            marginTop: '-12px',
+          }}
+        />
+      </Link>
+
       <CardContent sx={{ paddingTop: '120px' }}>
-        <Link to='/listeners/id'>
+        <Link to={`/chat/${data._id}`}>
           <Typography gutterBottom variant='h5' component='div'>
-            Lizard
+            {data?.nickname || 'Listener'}
           </Typography>
         </Link>
         <Box sx={{ display: 'flex', alignItems: 'center' }} className='Rates'>
@@ -35,8 +40,8 @@ const ListenerCard = () => {
           <Chip label='Clickable Link' component='a' href='#basic-chip' clickable />
         </Box>
         <Typography variant='body2' color='text.secondary' className='Bio'>
-          Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-          across all continents except Antarctica
+          {data?.nickname} are a widespread group of squamate reptiles, with over 6,000 species,
+          ranging across all continents except Antarctica
         </Typography>
         <Button
           size='large'

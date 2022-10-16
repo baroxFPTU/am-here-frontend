@@ -15,7 +15,8 @@ export const authSlice = createSlice({
       state.isLoggedIn = true;
     },
     logout: (state) => {
-      state = { ...initialState };
+      state.user = null;
+      state.isLoggedIn = false;
     },
     setActiveRole: (state, action) => {
       state.activeRole = action.payload;
@@ -30,5 +31,6 @@ export const authActions = authSlice.actions;
 
 export const selectUser = (state) => state.auth.user;
 export const selectIsLoggedIn = (state) => state.auth.isLoggedIn;
+export const selectCurrentRole = (state) => state.auth.user?.active_role;
 
 export default authSlice.reducer;

@@ -1,5 +1,7 @@
+import { Typography } from '@mui/material';
+import { ROLE_LISTENER_STRING, ROLE_MEMBER_STRING } from 'app/constant';
+import { selectCurrentRole } from 'features/auth/authSlice';
 import { chatActions, selectCurrentReceiver } from 'features/chat/chatSlice';
-import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import Contact from './Contact';
@@ -7,14 +9,19 @@ import Contact from './Contact';
 export default function Contacts({ contacts }) {
   const dispatch = useDispatch();
   const currentReceiver = useSelector(selectCurrentReceiver);
+  const currentRole = useSelector(selectCurrentRole);
   const handleChangeContactSelect = (contactId) => {
     dispatch(chatActions.setCurrentReceiver(contactId));
   };
+  console.log(contacts);
 
   return (
     <Container>
       <div className='contacts-header'>
-        <h5>Chat</h5>
+        <Typography variant='h6' sx={{ textAlign: 'center', color: '#fff', width: '100%' }}>
+          {currentRole == ROLE_MEMBER_STRING && 'Người lắng nghe'}
+          {currentRole == ROLE_LISTENER_STRING && 'Người kể chuyện'}
+        </Typography>
       </div>
       <div className='contacts'>
         {contacts.map((contact) => (
@@ -22,7 +29,10 @@ export default function Contacts({ contacts }) {
             key={contact._id}
             data={contact}
             onChangeSelectContact={handleChangeContactSelect}
-            isSelected={Boolean(currentReceiver._id === contact._id)}
+            isSelected={Boolean(
+              (typeof currentReceiver === 'string' ? currentReceiver : currentReceiver._id) ===
+                contact._id
+            )}
           />
         ))}
       </div>
@@ -33,27 +43,21 @@ export default function Contacts({ contacts }) {
 const Container = styled.div`
   background-color: white;
   box-sizing: border-box;
-  border-right: 2px solid #bebebe;
   display: grid;
-  grid-template-rows: 10% 90%;
+  grid-template-rows: 60px 90%;
   .contacts-header {
-    padding-left: 15px;
     display: flex;
     align-items: center;
-    h5 {
-      font-size: 20px;
-      color: #3881a0;
-      font-weight: 400;
-    }
+    background: #7db4bb;
   }
 
   .contacts {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    /* background-color: #3881a0; */
+    background-color: #fafafa;
     height: 100%;
-    padding: 0 5px;
+    padding: 12px;
 
     .selected {
       background-color: #cce2f5 !important;
@@ -64,8 +68,8 @@ const Container = styled.div`
       width: 100%;
       height: 70px;
       padding-left: 15px;
-      /* background-color: #bebebe; */
-      border-radius: 3px;
+      background-color: #fff;
+      border-radius: 8px;
       align-items: center;
       display: flex;
       gap: 10px;

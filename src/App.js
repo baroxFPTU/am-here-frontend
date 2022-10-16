@@ -20,14 +20,10 @@ function App() {
             <Route path='/listeners/:id' element={<ListenerDetail />} />
           </Route>
           <Route path='/' element={<PrivateRoute />}>
-            <Route
-              path='/chat'
-              element={
-                <ChatLayout>
-                  <Chat />
-                </ChatLayout>
-              }
-            />
+            <Route path='/chat' element={<ChatLayout />}>
+              <Route path='' element={<Chat />} />
+              <Route path=':uid' element={<Chat />} />
+            </Route>
           </Route>
           <Route path='/auth' element={<AuthLayout />}>
             <Route path='login' element={<Login />} />

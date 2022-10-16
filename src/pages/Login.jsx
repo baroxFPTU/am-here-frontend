@@ -12,29 +12,19 @@ import { useNavigate } from 'react-router-dom';
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [value, setValue] = React.useState(0);
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+
   const updateUser = (user) => {
     if (!user) return;
     dispatchUserData(user);
     navigate('/');
   };
-  const {
-    user,
-    error,
-    signInWithGoogle,
-    signInWithFacebook,
-    signOut: signOutBoth,
-  } = useAuth(updateUser);
-  // signOutBoth();
+  const { user, error, signInWithGoogle, signInWithFacebook } = useAuth(updateUser);
   const handleLoginWithPassword = async ({ email, password }) => {
     try {
       const credential = await signInWithEmailAndPassword(auth, email, password);
       const userData = credential.user;
       dispatchUserData(userData);
-      navigate('/');
+      navigate(-1);
     } catch (error) {
       console.error(error);
     }
@@ -67,7 +57,7 @@ const Login = () => {
         nickname: userData.displayName,
         uid: userData.uid,
         email: userData.email,
-        active_role: 'member',
+        active_role: 'listener',
       });
       const result = await response.data;
       dispatch(

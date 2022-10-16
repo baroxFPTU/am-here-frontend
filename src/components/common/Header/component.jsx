@@ -1,8 +1,7 @@
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import MenuIcon from '@mui/icons-material/Menu';
-import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
 import {
   AppBar,
+  Avatar,
   Box,
   Button,
   Container,
@@ -15,11 +14,16 @@ import {
   ListItemText,
   Stack,
   Toolbar,
+  Tooltip,
   Typography,
 } from '@mui/material';
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { selectUser } from 'features/auth/authSlice';
+import useAuth from 'features/auth/useAuth';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../Logo';
+import AccountTooltip from './AccountTooltip';
 
 const drawerWidth = 240;
 
@@ -36,18 +40,30 @@ const navItems = [
     label: 'Phòng chat',
     href: '/chat',
   },
-  {
-    label: 'Trò chuyện với bác sĩ',
-    href: '/take-care',
-  },
-  {
-    label: 'Làm người lắng nghe',
-    href: '/abc',
-  },
 ];
 
 const Header = () => {
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const currentUser = useSelector(selectUser);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const isShowAccountTooltip = Boolean(anchorEl);
+  const { signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      navigate('/auth/login');
+    } catch (error) {}
+  };
+
+  const handleClickAvatar = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
+
+  const handleCloseAccountTooltip = () => {
+    setAnchorEl(null);
+  };
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -55,9 +71,7 @@ const Header = () => {
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
-      <Typography variant='h6' sx={{ my: 2 }}>
-        MUI
-      </Typography>
+      <Typography variant='h6' sx={{ my: 2 }}></Typography>
       <Divider />
       <List>
         {navItems.map((item) => (
@@ -71,6 +85,9 @@ const Header = () => {
     </Box>
   );
 
+  const getFirstLetter = (str) => {
+    return str?.charAt(0) || null;
+  };
   const container = document.querySelector('#root');
   return (
     <>
@@ -90,12 +107,29 @@ const Header = () => {
                   </Button>
                 ))}
               </Box>
-              <IconButton>
-                <AccountCircleOutlinedIcon fontSize='large' htmlColor='#87CEEB' />
-              </IconButton>
-              <IconButton>
-                <PersonAddOutlinedIcon fontSize='large' htmlColor='#87CEEB' />
-              </IconButton>
+              <Tooltip title='Account settings'>
+                <IconButton
+                  onClick={handleClickAvatar}
+                  size='small'
+                  sx={{ ml: 2 }}
+                  aria-controls={isShowAccountTooltip ? 'account-menu' : undefined}
+                  aria-haspopup='true'
+                  aria-expanded={isShowAccountTooltip ? 'true' : undefined}
+                >
+                  {currentUser && (
+                    <Avatar src={currentUser && currentUser.photoURL}>
+                      {!currentUser.photoURL && getFirstLetter(currentUser.nickname)}
+                    </Avatar>
+                  )}
+                  {!currentUser && <Avatar />}
+                </IconButton>
+              </Tooltip>
+              <AccountTooltip
+                isOpen={isShowAccountTooltip}
+                onClose={handleCloseAccountTooltip}
+                anchorEl={anchorEl}
+                onLogout={handleSignOut}
+              />
               <IconButton
                 color='inherit'
                 aria-label='open drawer'
