@@ -55,7 +55,7 @@ const Login = () => {
     console.log({ userData });
     try {
       if (!userData) return;
-      const response = await axios.post('http://10.1.106.147:3000/api/user', {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/user`, {
         nickname: userData.displayName,
         uid: userData.uid,
         email: userData.email,
