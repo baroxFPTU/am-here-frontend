@@ -57,9 +57,7 @@ const Home = () => {
       console.log(currentRole);
       if (currentRole === ROLE_MEMBER_STRING) {
         try {
-          const response = await axios.get(
-            'http://10.1.106.147:3000/api/user/filter/role/listener'
-          );
+          const response = await axios.get(`${REACT_APP_API_URL}/user/filter/role/listener`);
 
           setListeners(response.data);
         } catch (error) {
