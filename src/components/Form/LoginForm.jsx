@@ -1,7 +1,9 @@
-import { Button, Divider, Link, Stack, TextField } from '@mui/material';
+import { Button, Divider, Stack, TextField } from '@mui/material';
+import { Typography } from '@mui/material';
 import GoogleIcon from 'assets/img/google-icon.png';
 import { useRef } from 'react';
 import { FaFacebookF } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const GoogleButton = styled(Button)`
@@ -41,6 +43,7 @@ const LoginForm = ({ onLoginWithPassword, onLoginWithGoogle, onLoginWithFacebook
 
   return (
     <Stack className='LoginBox' spacing={4}>
+      <Typography variant='h5'>Đăng nhập</Typography>
       <form className='form-container' onSubmit={handleSubmit}>
         <Stack spacing={2}>
           <TextField
@@ -72,16 +75,8 @@ const LoginForm = ({ onLoginWithPassword, onLoginWithGoogle, onLoginWithFacebook
 
       <Divider>Hoặc</Divider>
       <Stack direction='row' justifyContent='center' spacing={2}>
-        <GoogleButton variant='contained' onClick={handleClickLoginWithGoogle}>
-          <img src={GoogleIcon} alt='icon-google' />
-        </GoogleButton>
-        <Button
-          variant='contained'
-          sx={{ background: '#1b74e4', py: 1, boxShadow: 'none' }}
-          size='medium'
-          onClick={handleClickLoginWithFacebook}
-        >
-          <FaFacebookF />
+        <Button sx={{ width: '100%' }}>
+          <Link to='/auth/sign-up'>Đăng kí</Link>
         </Button>
       </Stack>
     </Stack>

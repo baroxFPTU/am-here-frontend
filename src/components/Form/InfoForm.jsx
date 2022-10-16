@@ -151,7 +151,7 @@ const InfoForm = ({ defaultValues, handleNext }) => {
           )}
         />
 
-        <input type='submit' />
+        {/* <input type='submit' /> */}
       </Stack>
       <Button variant='contained' type='submit' sx={{ mt: 1, mr: 1 }}>
         Tiếp tục

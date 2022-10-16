@@ -55,7 +55,7 @@ export default function Chat() {
           })
         );
 
-        const conversationResponse = await axios.post(`${REACT_APP_API_URL}/api/message/getmsg`, {
+        const conversationResponse = await axios.post(`${REACT_APP_API_URL}/message/getmsg`, {
           sender: senderId,
           receiver: receiverId,
         });
@@ -69,7 +69,7 @@ export default function Chat() {
   useEffect(() => {
     (async () => {
       if (currentReceiver) {
-        const conversationResponse = await axios.post(`${REACT_APP_API_URL}/api/message/getmsg`, {
+        const conversationResponse = await axios.post(`${REACT_APP_API_URL}/message/getmsg`, {
           sender: senderId,
           receiver: receiverId,
         });

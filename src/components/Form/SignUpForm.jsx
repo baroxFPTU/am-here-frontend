@@ -75,26 +75,30 @@ const SignUpForm = () => {
   };
 
   const handleSubmitCategories = async (categories) => {
-    console.log(categories);
-    registerData.current = {
-      ...registerData.current,
-      categories,
-    };
+    try {
+      console.log(categories);
+      registerData.current = {
+        ...registerData.current,
+        categories,
+      };
 
-    signUpWithPassword({
-      email: registerData.current.email,
-      password: registerData.current.password,
-      displayName: registerData.current.nickname,
-      photoURL: 'https://source.unsplash.com/random',
-    });
-    dispatch(authActions.setActiveRole(registerData.current.active_role));
-    const response = await axios.post(`${REACT_APP_API_URL}/user`, {
-      nickname: registerData.current.nickname,
-      uid: user.uid,
-      email: registerData.current.email,
-      active_role: registerData.current.active_role,
-    });
-    navigate('/auth/login');
+      signUpWithPassword({
+        email: registerData.current.email,
+        password: registerData.current.password,
+        displayName: registerData.current.nickname,
+        photoURL: 'https://source.unsplash.com/random',
+      });
+      dispatch(authActions.setActiveRole(registerData.current.active_role));
+      const response = await axios.post(`${REACT_APP_API_URL}/user`, {
+        nickname: registerData.current.nickname,
+        uid: user.uid,
+        email: registerData.current.email,
+        active_role: registerData.current.active_role,
+      });
+      navigate('/');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleBack = () => {
