@@ -46,8 +46,8 @@ export default function Chat() {
       try {
         const url =
           currentRole === ROLE_MEMBER_STRING
-            ? `http://10.1.106.147:3000/api/conversation?senderId=${senderId}`
-            : `http://10.1.106.147:3000/api/conversation/listener?receiverId=${senderId}`;
+            ? `${process.env.REACT_APP_API_URL}/conversation?senderId=${senderId}`
+            : `${process.env.REACT_APP_API_URL}/conversation/listener?receiverId=${senderId}`;
         const response = await axios.get(url);
         const currentReceiver = params.uid || response.data[0];
         dispatch(

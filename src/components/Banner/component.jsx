@@ -6,7 +6,7 @@ const ListenerCard = () => {
   return (
     <Styled.Banner>
       <Typography variant='h2' sx={{ color: '#fff' }}>
-        Chua lanh thong qua lang nghe
+        Chữa lành thông qua lắng nghe
       </Typography>
     </Styled.Banner>
   );

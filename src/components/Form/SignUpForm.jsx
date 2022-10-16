@@ -88,7 +88,7 @@ const SignUpForm = () => {
       photoURL: 'https://source.unsplash.com/random',
     });
     dispatch(authActions.setActiveRole(registerData.current.active_role));
-    const response = await axios.post('http://10.1.106.147:3000/api/user', {
+    const response = await axios.post(`${process.env.REACT_APP_API_URL}/user`, {
       nickname: registerData.current.nickname,
       uid: user.uid,
       email: registerData.current.email,
