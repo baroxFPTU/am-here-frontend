@@ -1,11 +1,13 @@
 import { auth } from 'app/firebase';
 import { authActions } from 'features/auth/authSlice';
 import {
+  createUserWithEmailAndPassword,
   FacebookAuthProvider,
   GoogleAuthProvider,
   onAuthStateChanged,
   signInWithPopup,
   signOut,
+  updateProfile,
 } from 'firebase/auth';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -72,6 +74,23 @@ function useAuth(callback) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const signUpWithPassword = useCallback(async ({ email, password, displayName, photoURL }) => {
+    try {
+      const response = await createUserWithEmailAndPassword(auth, email, password);
+      console.log(response);
+      updateUserData({ displayName: displayName, photoURL: photoURL });
+    } catch (error) {
+      throw new Error(error);
+    }
+  }, []);
+
+  const updateUserData = useCallback(async ({ displayName, photoURL }) => {
+    updateProfile(auth.currentUser, {
+      displayName: displayName,
+      photoURL: photoURL,
+    });
+  }, []);
+
   const signOutAll = useCallback(async () => {
     await signOut(auth);
     const action = authActions.logout();
@@ -80,7 +99,15 @@ function useAuth(callback) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return { user, error, signInWithGoogle, signInWithFacebook, signOut: signOutAll };
+  return {
+    user,
+    error,
+    signInWithGoogle,
+    signInWithFacebook,
+    signOut: signOutAll,
+    signUpWithPassword,
+    updateUserData,
+  };
 }
 
 export default useAuth;
