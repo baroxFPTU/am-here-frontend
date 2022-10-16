@@ -1,6 +1,6 @@
-import { Grid, Pagination, Stack } from '@mui/material';
-import ListenerCard from 'components/ListenerCard';
-import React from 'react';
+import { Grid, Pagination, Stack } from "@mui/material";
+import ListenerCard from "components/ListenerCard";
+import React from "react";
 
 const ListenerList = ({ listeners }) => {
   return (
@@ -12,7 +12,7 @@ const ListenerList = ({ listeners }) => {
           </Grid>
         ))}
       </Grid>
-      <Stack direction='row' justifyContent='center'>
+      <Stack direction="row" justifyContent="center">
         <Pagination sx={{ p: 5 }} count={10} />
       </Stack>
     </>
