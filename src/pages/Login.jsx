@@ -1,4 +1,5 @@
 import { Box, Stack } from '@mui/material';
+import { REACT_APP_API_URL } from 'app/constant';
 import { auth } from 'app/firebase';
 import axios from 'axios';
 import LoginForm from 'components/Form/LoginForm';
@@ -15,6 +16,7 @@ const Login = () => {
 
   const updateUser = (user) => {
     if (!user) return;
+    console.log({ user });
     dispatchUserData(user);
     navigate('/');
   };
@@ -51,13 +53,13 @@ const Login = () => {
   };
 
   const dispatchUserData = async (userData) => {
+    console.log({ userData });
     try {
       if (!userData) return;
-      const response = await axios.post('http://10.1.106.147:3000/api/user', {
+      const response = await axios.post(`${REACT_APP_API_URL}/user`, {
         nickname: userData.displayName,
         uid: userData.uid,
         email: userData.email,
-        active_role: 'listener',
       });
       const result = await response.data;
       dispatch(

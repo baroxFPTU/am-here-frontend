@@ -1,16 +1,23 @@
-import { Stack } from '@mui/material';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Paper from '@mui/material/Paper';
-import Step from '@mui/material/Step';
-import StepContent from '@mui/material/StepContent';
-import StepLabel from '@mui/material/StepLabel';
-import Stepper from '@mui/material/Stepper';
-import Typography from '@mui/material/Typography';
-import { ROLE_LISTENER_STRING, ROLE_MEMBER_STRING } from 'app/constant';
-import SelectCategory from 'components/SelectField/SelectCategory';
 import * as React from 'react';
+import axios from 'axios';
+import Box from '@mui/material/Box';
+import Step from '@mui/material/Step';
+import { Stack } from '@mui/material';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import Stepper from '@mui/material/Stepper';
+import StepLabel from '@mui/material/StepLabel';
+import Typography from '@mui/material/Typography';
+import StepContent from '@mui/material/StepContent';
+
+import { REACT_APP_API_URL, ROLE_LISTENER_STRING, ROLE_MEMBER_STRING } from 'app/constant';
+import SelectCategory from 'components/SelectField/SelectCategory';
+import useAuth from 'features/auth/useAuth';
 import InfoForm from './InfoForm';
+import { useNavigate } from 'react-router-dom';
+import { getAuth, updateProfile } from 'firebase/auth';
+import { useDispatch } from 'react-redux';
+import { authActions } from 'features/auth/authSlice';
 
 const steps = [
   {
@@ -32,8 +39,11 @@ const steps = [
 
 const SignUpForm = () => {
   const [activeStep, setActiveStep] = React.useState(0);
+  const { user, signUpWithPassword, updateUserData } = useAuth();
   const [selectedRole, setSelectedRole] = React.useState(null);
   const registerData = React.useRef(null);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const infoFormValues = {
     nickname: '',
     email: '',
@@ -64,6 +74,33 @@ const SignUpForm = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
+  const handleSubmitCategories = async (categories) => {
+    try {
+      console.log(categories);
+      registerData.current = {
+        ...registerData.current,
+        categories,
+      };
+
+      signUpWithPassword({
+        email: registerData.current.email,
+        password: registerData.current.password,
+        displayName: registerData.current.nickname,
+        photoURL: 'https://source.unsplash.com/random',
+      });
+      dispatch(authActions.setActiveRole(registerData.current.active_role));
+      const response = await axios.post(`${REACT_APP_API_URL}/user`, {
+        nickname: registerData.current.nickname,
+        uid: user.uid,
+        email: registerData.current.email,
+        active_role: registerData.current.active_role,
+      });
+      navigate('/');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
@@ -75,12 +112,15 @@ const SignUpForm = () => {
   const memberCategories = [
     {
       label: 'Áp lực',
+      value: 'ap-luc',
     },
     {
       label: 'Học tập',
+      value: 'hoc-tap',
     },
     {
       label: 'Cô đơn',
+      value: 'co-don',
     },
   ];
 
@@ -138,7 +178,7 @@ const SignUpForm = () => {
         <Step>
           <StepLabel
             optional={
-              activeStep === 2 ? <Typography variant='caption'>Last step</Typography> : null
+              activeStep === 2 ? <Typography variant='caption'>Bước cuối</Typography> : null
             }
           >
             {selectedRole === ROLE_MEMBER_STRING ? 'Vấn đề tâm lý của bạn' : 'Lĩnh vực của bạn'}
@@ -146,13 +186,11 @@ const SignUpForm = () => {
           <StepContent>
             <Box sx={{ mb: 2 }}>
               <div>
-                <SelectCategory defaultOptions={memberCategories} />
-                <Button variant='contained' onClick={handleNext} sx={{ mt: 1, mr: 1 }}>
-                  {'Hoàn thành'}
-                </Button>
-                <Button disabled={activeStep === 0} onClick={handleBack} sx={{ mt: 1, mr: 1 }}>
-                  Trở lại
-                </Button>
+                <SelectCategory
+                  defaultOptions={memberCategories}
+                  onSubmit={handleSubmitCategories}
+                  onBack={handleBack}
+                />
               </div>
             </Box>
           </StepContent>

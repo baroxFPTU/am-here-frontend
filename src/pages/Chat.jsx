@@ -10,10 +10,8 @@ import ChatListMessage from 'components/chat/ChatListMessage';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrentRole, selectUser } from 'features/auth/authSlice';
 import { chatActions, selectContacts, selectCurrentReceiver } from 'features/chat/chatSlice';
-import { ROLE_LISTENER_STRING, ROLE_MEMBER_STRING } from 'app/constant';
+import { REACT_APP_API_URL, ROLE_LISTENER_STRING, ROLE_MEMBER_STRING } from 'app/constant';
 import { useParams } from 'react-router-dom';
-
-const host = 'http://10.1.106.147:3000';
 
 const StyledButton = styled(Button)`
   &:hover {
@@ -36,12 +34,18 @@ export default function Chat() {
   const receiverId = currentReceiver?._id || params.uid;
   console.log(currentRole);
   useEffect(() => {
+    socket.current = io(REACT_APP_API_URL);
+    socket.current.emit('add-user', senderId);
+    socket.current.on('msg-receive', (data) => {
+      console.log({ dataReceived: data });
+      pushMessageToState(data);
+    });
     (async () => {
       try {
         const url =
           currentRole === ROLE_MEMBER_STRING
-            ? `http://10.1.106.147:3000/api/conversation?senderId=${senderId}`
-            : `http://10.1.106.147:3000/api/conversation/listener?receiverId=${senderId}`;
+            ? `${REACT_APP_API_URL}/conversation?senderId=${senderId}`
+            : `${REACT_APP_API_URL}/conversation/listener?receiverId=${senderId}`;
         const response = await axios.get(url);
         const currentReceiver = params.uid || response.data[0];
         dispatch(
@@ -51,7 +55,7 @@ export default function Chat() {
           })
         );
 
-        const conversationResponse = await axios.post(`${host}/api/message/getmsg`, {
+        const conversationResponse = await axios.post(`${REACT_APP_API_URL}/message/getmsg`, {
           sender: senderId,
           receiver: receiverId,
         });
@@ -60,18 +64,12 @@ export default function Chat() {
         throw new Error(error);
       }
     })();
-    socket.current = io(host);
-    socket.current.emit('add-user', senderId);
-    socket.current.on('msg-receive', (data) => {
-      console.log({ dataReceived: data });
-      pushMessageToState(data);
-    });
   }, [isStart, currentUser, dispatch]);
 
   useEffect(() => {
     (async () => {
       if (currentReceiver) {
-        const conversationResponse = await axios.post(`${host}/api/message/getmsg`, {
+        const conversationResponse = await axios.post(`${REACT_APP_API_URL}/message/getmsg`, {
           sender: senderId,
           receiver: receiverId,
         });

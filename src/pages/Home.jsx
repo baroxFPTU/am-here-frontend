@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { authActions, selectCurrentRole } from 'features/auth/authSlice';
 
 import axios from 'axios';
-import { ROLE_MEMBER_STRING } from 'app/constant';
+import { REACT_APP_API_URL, ROLE_MEMBER_STRING } from 'app/constant';
 
 const Home = () => {
   const [listeners, setListeners] = useState([]);
@@ -30,11 +30,11 @@ const Home = () => {
   const dispatchUserData = async (userData) => {
     try {
       if (!userData) return;
-      const response = await axios.post('http://10.1.106.147:3000/api/user', {
+      const response = await axios.post(`${REACT_APP_API_URL}/user`, {
         nickname: userData.displayName,
         uid: userData.uid,
         email: userData.email,
-        active_role: 'listener',
+        active_role: userData.active_role,
       });
       const result = await response.data;
       dispatch(
@@ -57,9 +57,7 @@ const Home = () => {
       console.log(currentRole);
       if (currentRole === ROLE_MEMBER_STRING) {
         try {
-          const response = await axios.get(
-            'http://10.1.106.147:3000/api/user/filter/role/listener'
-          );
+          const response = await axios.get(`${REACT_APP_API_URL}/user/filter/role/listener`);
 
           setListeners(response.data);
         } catch (error) {
