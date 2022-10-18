@@ -62,6 +62,7 @@ const Login = () => {
         email: userData.email,
       });
       const result = await response.data;
+      console.log({ result });
       dispatch(
         authActions.login({
           id: result._id,
@@ -72,6 +73,7 @@ const Login = () => {
           active_role: result.active_role,
         })
       );
+      localStorage.setItem('active_role', result.active_role);
     } catch (error) {
       throw new Error(error);
     }

@@ -8,16 +8,20 @@ import FilterSideBar from 'components/FilterSideBar';
 import useAuth from 'features/auth/useAuth';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { authActions, selectCurrentRole } from 'features/auth/authSlice';
+import { authActions, selectCurrentRole, selectUser } from 'features/auth/authSlice';
 
 import axios from 'axios';
-import { REACT_APP_API_URL, ROLE_MEMBER_STRING } from 'app/constant';
+import { REACT_APP_API_URL, ROLE_LISTENER_STRING, ROLE_MEMBER_STRING } from 'app/constant';
 
 const Home = () => {
   const [listeners, setListeners] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const currentRole = useSelector(selectCurrentRole);
+  const user = useSelector(selectUser);
+  if (currentRole === ROLE_LISTENER_STRING) {
+    navigate(`/listeners/${user.id}`);
+  }
 
   const updateUser = (user) => {
     if (!user) return;
@@ -34,7 +38,7 @@ const Home = () => {
         nickname: userData.displayName,
         uid: userData.uid,
         email: userData.email,
-        active_role: userData.active_role,
+        active_role: localStorage.getItem('active_role'),
       });
       const result = await response.data;
       dispatch(

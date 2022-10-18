@@ -60,7 +60,6 @@ const SignUpForm = () => {
         ...formValues,
       };
     }
-    console.log({ registerData: registerData.current });
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
   const handleNextWithRole = (role) => {
@@ -70,7 +69,7 @@ const SignUpForm = () => {
         active_role: role,
       };
     }
-    console.log({ registerData: registerData.current });
+    localStorage.setItem('active_role', role);
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
@@ -88,6 +87,7 @@ const SignUpForm = () => {
         displayName: registerData.current.nickname,
         photoURL: 'https://source.unsplash.com/random',
       });
+      console.log(registerData.current.active_role);
       dispatch(authActions.setActiveRole(registerData.current.active_role));
       const response = await axios.post(`${REACT_APP_API_URL}/user`, {
         nickname: registerData.current.nickname,
@@ -98,6 +98,7 @@ const SignUpForm = () => {
       navigate('/');
     } catch (error) {
       console.log(error);
+      navigate('/');
     }
   };
 

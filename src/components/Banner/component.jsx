@@ -5,9 +5,9 @@ import * as Styled from './styles';
 const ListenerCard = () => {
   return (
     <Styled.Banner>
-      <Typography variant='h2' sx={{ color: '#fff' }}>
+      {/* <Typography variant='h2' sx={{ color: '#fff' }}>
         Chữa lành thông qua lắng nghe
-      </Typography>
+      </Typography> */}
     </Styled.Banner>
   );
 };

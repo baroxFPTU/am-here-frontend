@@ -32,9 +32,9 @@ export default function Chat() {
   const [isStart, setIsStart] = useState(false);
   const senderId = currentUser.id;
   const receiverId = currentReceiver?._id || params.uid;
-  console.log(currentRole);
+
   useEffect(() => {
-    socket.current = io(REACT_APP_API_URL);
+    socket.current = io('http://10.1.106.147:3000/');
     socket.current.emit('add-user', senderId);
     socket.current.on('msg-receive', (data) => {
       console.log({ dataReceived: data });
