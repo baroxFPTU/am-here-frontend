@@ -10,3 +10,18 @@ export const APP_ROUTES = {
   chat: '/chat',
   listenerDetail: '/listeners',
 };
+
+export const NAV_ITEMS = [
+  {
+    label: 'Trang chủ',
+    href: '/',
+  },
+  {
+    label: 'Về chúng tôi',
+    href: '/about-us',
+  },
+  {
+    label: 'Phòng chat',
+    href: '/chat',
+  },
+];
