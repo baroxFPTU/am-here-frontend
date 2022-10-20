@@ -3,7 +3,6 @@ import {
   AppBar,
   Avatar,
   Box,
-  Button,
   Container,
   Divider,
   Drawer,
@@ -17,11 +16,12 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { selectUser } from 'features/auth/authSlice';
-import useAuth from 'features/auth/useAuth';
+import { selectAuthenticated, selectUser } from 'features/auth/authSlice';
+import useAuth from 'features/auth/hooks/useAuth';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import Button from '../Button';
 import Logo from '../Logo';
 import AccountTooltip from './AccountTooltip';
 
@@ -43,6 +43,7 @@ const navItems = [
 ];
 
 const Header = () => {
+  const isAuthenticated = useSelector(selectAuthenticated);
   const currentUser = useSelector(selectUser);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -89,6 +90,7 @@ const Header = () => {
     return str?.charAt(0) || null;
   };
   const container = document.querySelector('#root');
+
   return (
     <>
       <AppBar component='nav' style={{ background: '#fff', color: '#333', boxShadow: 'none' }}>
@@ -107,23 +109,30 @@ const Header = () => {
                   </Button>
                 ))}
               </Box>
-              <Tooltip title='Account settings'>
-                <IconButton
-                  onClick={handleClickAvatar}
-                  size='small'
-                  sx={{ ml: 2 }}
-                  aria-controls={isShowAccountTooltip ? 'account-menu' : undefined}
-                  aria-haspopup='true'
-                  aria-expanded={isShowAccountTooltip ? 'true' : undefined}
-                >
-                  {currentUser && (
-                    <Avatar src={currentUser && currentUser.photoURL}>
-                      {!currentUser.photoURL && getFirstLetter(currentUser.nickname)}
-                    </Avatar>
-                  )}
-                  {!currentUser && <Avatar />}
-                </IconButton>
-              </Tooltip>
+              {!isAuthenticated && (
+                <Button variant='contained' sx={{ ml: '12px' }} component={Link} to='/auth/login'>
+                  Đăng nhập
+                </Button>
+              )}
+              {isAuthenticated && (
+                <Tooltip title='Account settings'>
+                  <IconButton
+                    onClick={handleClickAvatar}
+                    size='small'
+                    sx={{ ml: 2 }}
+                    aria-controls={isShowAccountTooltip ? 'account-menu' : undefined}
+                    aria-haspopup='true'
+                    aria-expanded={isShowAccountTooltip ? 'true' : undefined}
+                  >
+                    {currentUser && (
+                      <Avatar src={currentUser && currentUser.photoURL}>
+                        {!currentUser.photoURL && getFirstLetter(currentUser.nickname)}
+                      </Avatar>
+                    )}
+                    {!currentUser && <Avatar />}
+                  </IconButton>
+                </Tooltip>
+              )}
               <AccountTooltip
                 isOpen={isShowAccountTooltip}
                 onClose={handleCloseAccountTooltip}

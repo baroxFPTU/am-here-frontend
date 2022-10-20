@@ -23,6 +23,7 @@ const SelectCategory = ({ defaultOptions, onSubmit, onBack }) => {
         renderTags={(tagValue, getTagProps) =>
           tagValue.map((option, index) => (
             <Chip
+              key={index}
               label={option.label}
               {...getTagProps({ index })}
               disabled={fixedOptions.indexOf(option) !== -1}

@@ -12,7 +12,7 @@ import StepContent from '@mui/material/StepContent';
 
 import { REACT_APP_API_URL, ROLE_LISTENER_STRING, ROLE_MEMBER_STRING } from 'app/constant';
 import SelectCategory from 'components/SelectField/SelectCategory';
-import useAuth from 'features/auth/useAuth';
+import useAuth from 'features/auth/hooks/useAuth';
 import InfoForm from './InfoForm';
 import { useNavigate } from 'react-router-dom';
 import { getAuth, updateProfile } from 'firebase/auth';

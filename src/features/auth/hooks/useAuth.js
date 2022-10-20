@@ -1,46 +1,25 @@
 import { auth } from 'app/firebase';
-import { authActions } from 'features/auth/authSlice';
+import { authActions, selectUser } from 'features/auth/authSlice';
 import {
   createUserWithEmailAndPassword,
   FacebookAuthProvider,
   GoogleAuthProvider,
-  onAuthStateChanged,
   signInWithPopup,
   signOut,
   updateProfile,
 } from 'firebase/auth';
-import { useCallback, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useCallback, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-function useAuth(callback) {
+function useAuth() {
   const dispatch = useDispatch();
-  const [user, setUser] = useState(null);
+  const currentUser = useSelector(selectUser);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const googleProvider = new GoogleAuthProvider();
   const facebookProvider = new FacebookAuthProvider();
-
-  useEffect(() => {
-    // console.log(user);
-    if (!callback) return;
-    if (user) {
-      callback(user);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
-
-  useEffect(() => {
-    const unregistered = onAuthStateChanged(auth, (user) => {
-      if (!user) return;
-      setUser(user);
-    });
-
-    return () => {
-      unregistered();
-    };
-  }, []);
 
   const signIn = async (platform) => {
     let provider = null;
@@ -82,6 +61,7 @@ function useAuth(callback) {
     } catch (error) {
       throw new Error(error);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const updateUserData = useCallback(async ({ displayName, photoURL }) => {
@@ -100,7 +80,7 @@ function useAuth(callback) {
   }, []);
 
   return {
-    user,
+    user: currentUser,
     error,
     signInWithGoogle,
     signInWithFacebook,

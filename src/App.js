@@ -9,6 +9,8 @@ import MainLayout from './components/layout/MainLayout';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import SignUp from 'pages/SignUp';
+import { APP_ROUTES } from 'app/constant';
+import AuthRoute from 'components/routes/AuthRoute';
 
 function App() {
   return (
@@ -19,15 +21,17 @@ function App() {
             <Route path='' element={<Home />} />
             <Route path='/listeners/:id' element={<ListenerDetail />} />
           </Route>
-          <Route path='/' element={<PrivateRoute />}>
+          <Route element={<PrivateRoute redirectPath={APP_ROUTES.login} />}>
             <Route path='/chat' element={<ChatLayout />}>
               <Route path='' element={<Chat />} />
               <Route path=':uid' element={<Chat />} />
             </Route>
           </Route>
-          <Route path='/auth' element={<AuthLayout />}>
-            <Route path='login' element={<Login />} />
-            <Route path='sign-up' element={<SignUp />} />
+          <Route element={<AuthRoute />}>
+            <Route path='/auth' element={<AuthLayout redirectPath={APP_ROUTES.home} />}>
+              <Route path='login' element={<Login />} />
+              <Route path='sign-up' element={<SignUp />} />
+            </Route>
           </Route>
           <Route path='*' element={<NotFound />} />
         </Routes>
