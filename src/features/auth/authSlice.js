@@ -1,9 +1,9 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSelector, createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   user: null,
   activeRole: null,
-  isLoggedIn: false,
+  isAuthenticating: true,
 };
 
 export const authSlice = createSlice({
@@ -12,11 +12,10 @@ export const authSlice = createSlice({
   reducers: {
     login: (state, action) => {
       state.user = action.payload;
-      state.isLoggedIn = true;
+      state.isAuthenticating = false;
     },
     logout: (state) => {
       state.user = null;
-      state.isLoggedIn = false;
     },
     setActiveRole: (state, action) => {
       state.activeRole = action.payload;
@@ -24,13 +23,26 @@ export const authSlice = createSlice({
     setUserId: (state, action) => {
       state.user.id = action.payload;
     },
+    selectIsAuthenticating: (state, action) => {
+      state.isAuthenticating = action.payload;
+    },
   },
 });
 
 export const authActions = authSlice.actions;
 
 export const selectUser = (state) => state.auth.user;
-export const selectIsLoggedIn = (state) => state.auth.isLoggedIn;
+export const selectIsLoggedIn = createSelector(selectUser, (user) => {
+  return Boolean(user);
+});
+export const selectIsAuthenticating = (state) => state.auth.isAuthenticating;
+export const selectAuthenticated = createSelector(
+  selectUser,
+  selectIsAuthenticating,
+  (user, isAuthenticating) => {
+    return !isAuthenticating && user;
+  }
+);
 export const selectCurrentRole = (state) => state.auth.user?.active_role;
 
 export default authSlice.reducer;

@@ -50,7 +50,9 @@ const SelectField = ({ id, label, options }) => {
       >
         <MenuItem value={0}>{'- ' + label + ' -'}</MenuItem>
         {options.map((option) => (
-          <MenuItem value={option.value}>{option.label}</MenuItem>
+          <MenuItem key={option.value} value={option.value}>
+            {option.label}
+          </MenuItem>
         ))}
       </StyledSelect>
     </FormControl>

@@ -4,7 +4,7 @@ import { auth } from 'app/firebase';
 import axios from 'axios';
 import LoginForm from 'components/Form/LoginForm';
 import { authActions } from 'features/auth/authSlice';
-import useAuth from 'features/auth/useAuth';
+import useAuth from 'features/auth/hooks/useAuth';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import React from 'react';
 import { useDispatch } from 'react-redux';
