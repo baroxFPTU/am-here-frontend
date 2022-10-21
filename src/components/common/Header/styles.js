@@ -11,6 +11,7 @@ export const Header = styled.header`
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  border-bottom: 1px solid #dfe8f1;
 
   width: 100%;
   box-shadow: none;

@@ -1,20 +1,18 @@
-import { List, ListItem, ListItemButton, ListItemText, Typography } from '@mui/material';
+import { List, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import React from 'react';
+import CategoryWithCheckbox from './CategoryWithCheckbox';
+import { FilterSidebarBoxStyle, FilterSidebarLabelStyle } from './styles';
 
-const navItems = ['Cong viec', 'Hoc tap', 'Lo au', 'Gia dinh', 'Tinh cam', 'Xam hai'];
-const FilterSideBar = () => {
+const FilterSideBar = ({ label = 'Filter sidebar', options, fallbackMessage }) => {
   return (
-    <Box sx={{ textAlign: 'left', width: 300, background: '#f5f5f5', p: 5, borderRadius: '10px' }}>
-      <Typography variant='h5'>Danh muc</Typography>
+    <Box sx={FilterSidebarBoxStyle}>
+      <Typography variant='h5' sx={FilterSidebarLabelStyle}>
+        {label}
+      </Typography>
       <List>
-        {navItems.map((item) => (
-          <ListItem key={item} disablePadding>
-            <ListItemButton sx={{ textAlign: 'left' }}>
-              <ListItemText primary={item} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+        {options &&
+          options.map((item) => <CategoryWithCheckbox label={item.label} value={item.value} />)}
+        {!options && <Typography>{fallbackMessage}</Typography>}
       </List>
     </Box>
   );

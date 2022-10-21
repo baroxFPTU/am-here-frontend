@@ -9,7 +9,13 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { REACT_APP_API_URL, ROLE_LISTENER_STRING, ROLE_MEMBER_STRING } from 'app/constant';
+import {
+  CATEGORIES,
+  REACT_APP_API_URL,
+  ROLE_LISTENER_STRING,
+  ROLE_MEMBER_STRING,
+  SELECT_FIELD_LIST,
+} from 'app/constant';
 import axios from 'axios';
 
 const Home = () => {
@@ -17,6 +23,7 @@ const Home = () => {
   const navigate = useNavigate();
   const currentRole = useSelector(selectCurrentRole);
   const user = useSelector(selectUser);
+  const haveListeners = listeners.length > 0;
   if (currentRole === ROLE_LISTENER_STRING) {
     navigate(`/listeners/${user.id}`);
   }
@@ -38,11 +45,15 @@ const Home = () => {
   return (
     <div>
       <Banner />
-      <Section>
-        <FilterSideBar />
+      <Section noPadding>
+        <FilterSideBar
+          label='Danh mục'
+          options={CATEGORIES}
+          fallbackMessage='Không có bất kỳ sự lựa chọn nào.'
+        />
         <Container>
-          <FilterBar />
-          <ListenerList listeners={listeners} />
+          <FilterBar selectFieldList={SELECT_FIELD_LIST} invisible={haveListeners} />
+          <ListenerList listeners={listeners} haveListeners={haveListeners} />
         </Container>
       </Section>
     </div>

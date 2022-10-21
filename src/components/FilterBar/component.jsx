@@ -1,66 +1,21 @@
-import SearchIcon from '@mui/icons-material/Search';
-import { Box, Button, Stack, TextField } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import SelectField from 'components/SelectField';
 
-const FilterBar = ({ label }) => {
-  const genderOptions = [
-    {
-      label: 'Nữ',
-      value: 'female',
-    },
-    {
-      label: 'Nam',
-      value: 'male',
-    },
-    {
-      label: 'Khác',
-      value: 'others',
-    },
-  ];
-
-  const categoryOptions = [
-    {
-      label: 'Nguoi nghe',
-      value: 'normal',
-    },
-    {
-      label: 'Chuyen nghiep',
-      value: 'pro',
-    },
-    {
-      label: 'Chuyen gia',
-      value: 'master',
-    },
-  ];
-
-  const regionOptions = [
-    {
-      label: 'Ha Noi',
-      value: 'hanoi',
-    },
-    {
-      label: 'Ho Chi Minh',
-      value: 'hcm',
-    },
-    {
-      label: 'Da Nang',
-      value: 'danang',
-    },
-  ];
-
+const FilterBar = ({ label, selectFieldList = [], invisible }) => {
   return (
     <Box>
-      <Stack direction='row' justifyContent='space-between'>
+      <Stack direction='row' justifyContent='end'>
         <Box className='FilterFields'>
-          <SelectField id='gender' label='Giới tính' options={genderOptions} />
-          <SelectField id='category' label='Lĩnh vực' options={categoryOptions} />
-          <SelectField id='region' label='Khu vực' options={regionOptions} />
-        </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center' }} className='Search'>
-          <TextField id='standard-basic' label='Tìm kiếm người nghe' variant='standard' />
-          <Button variant='contained'>
-            <SearchIcon />
-          </Button>
+          {selectFieldList.length > 0 &&
+            invisible &&
+            selectFieldList.map((selectField, index) => (
+              <SelectField
+                key={index}
+                id={selectField.id}
+                label={selectField.label}
+                options={selectField.options}
+              />
+            ))}
         </Box>
       </Stack>
     </Box>

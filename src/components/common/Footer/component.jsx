@@ -1,4 +1,5 @@
 import {
+  Box,
   Container,
   Divider,
   Grid,
@@ -11,74 +12,80 @@ import {
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '../Logo';
+import Copyright from './Copyright';
+import GridItemLinks from './GridItemLinks';
 
-function generate(element) {
-  return [0, 1, 2].map((value) =>
+export function generate({ options, element }) {
+  return options.map((value) =>
     React.cloneElement(element, {
       key: value,
     })
   );
 }
 
+const aboutUsLinks = [
+  {
+    label: 'Blog',
+    href: '#blog',
+  },
+  {
+    label: 'FAQ',
+    href: '#FAQ',
+  },
+];
+
+const problemLinks = [
+  {
+    label: 'Công việc',
+    href: '#blog',
+  },
+  {
+    label: 'Lo âu',
+    href: '#FAQ',
+  },
+  {
+    label: 'Học tập',
+    href: '#FAQ',
+  },
+  {
+    label: 'Gia đình',
+    href: '#FAQ',
+  },
+  {
+    label: 'Tình cảm',
+    href: '#FAQ',
+  },
+];
+
+const contactLinks = [
+  {
+    label: '0977.050.271',
+    href: '#FAQ',
+  },
+  {
+    label: 'amhere.life@gmail.com',
+    href: '#FAQ',
+  },
+];
+
 const Footer = () => {
   return (
-    <footer>
+    <Box as='footer' sx={{ pt: 8, background: '#fafafb' }}>
       <Container>
-        <Grid container columns={{ xs: 4, sm: 8, md: 12 }}>
+        <Grid container columns={{ xs: 4, sm: 8, md: 12 }} sx={{ mb: 6 }}>
           <Grid item xs={3}>
             <Logo />
           </Grid>
-          <Grid item xs={3}>
-            <Stack direction='column' alignItems='start' className='AboutUs'>
-              <Typography variant='h6'>Ve chung toi</Typography>
-              <List dense={true}>
-                {generate(
-                  <ListItem pl={0} style={{ paddingLeft: 0 }}>
-                    <ListItemText primary='Single-line item' />
-                  </ListItem>
-                )}
-              </List>
-            </Stack>
-          </Grid>
-          <Grid item xs={3}>
-            <Stack direction='column' alignItems='start' className='AboutUs'>
-              <Typography variant='h6'>Van de</Typography>
-              <List dense={true}>
-                {generate(
-                  <ListItem style={{ paddingLeft: 0 }}>
-                    <ListItemText primary='Single-line item' />
-                  </ListItem>
-                )}
-              </List>
-            </Stack>
-          </Grid>
-          <Grid item xs={3}>
-            <Stack direction='column' alignItems='start' className='AboutUs'>
-              <Typography variant='h6'>Lien he</Typography>
-              <List dense={true}>
-                {generate(
-                  <ListItem style={{ paddingLeft: 0 }}>
-                    <ListItemText primary='Single-line item' />
-                  </ListItem>
-                )}
-              </List>
-            </Stack>
-          </Grid>
+          <GridItemLinks label='Về chúng tôi' links={aboutUsLinks} />
+          <GridItemLinks label='Vấn đề' links={problemLinks} />
+          <GridItemLinks label='Liên hệ' links={contactLinks} />
         </Grid>
       </Container>
       <Container>
-        <Divider light style={{ margin: '20px 0' }} />
-        <Stack direction='row' alignItems='center' justifyContent='space-between'>
-          <div className=''>
-            <Link href='#'>Ban quyen thuoc ve</Link>
-            <Link href='#'>AMHERE</Link>
-          </div>
-          <div className=''>
-            <span>© 2022 Copyright</span>
-          </div>
-        </Stack>
+        <Divider light />
+        <Copyright />
       </Container>
-    </footer>
+    </Box>
   );
 };
 
