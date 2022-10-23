@@ -1,17 +1,24 @@
-import React, { useEffect, useRef, useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import axios from 'axios';
 import { io } from 'socket.io-client';
 import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Avatar, Box, Button, Container as MuContainer, Stack } from '@mui/material';
-import axios from 'axios';
 
-import Contacts from 'components/chat/Contacts';
+import { baseURL } from 'app/axiosClient';
+import { REACT_APP_API_URL, ROLE_LISTENER_STRING, ROLE_MEMBER_STRING } from 'app/constant';
+
+import { selectCurrentRole, selectUser } from 'features/auth/authSlice';
+import { chatActions, selectCurrentReceiver } from 'features/chat/chatSlice';
+
 import ChatInput from 'components/chat/ChatInput';
 import ChatListMessage from 'components/chat/ChatListMessage';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectCurrentRole, selectUser } from 'features/auth/authSlice';
-import { chatActions, selectContacts, selectCurrentReceiver } from 'features/chat/chatSlice';
-import { REACT_APP_API_URL, ROLE_LISTENER_STRING, ROLE_MEMBER_STRING } from 'app/constant';
-import { useParams } from 'react-router-dom';
+import ConversationHeader from 'components/chat/conversations/ConversationHeader';
+import ConversationList from 'components/chat/conversations/ConversationList';
+import { ConversationSection } from 'components/chat/conversations/styles';
+import { ChatWrapper } from 'components/chat/styles';
 
 const StyledButton = styled(Button)`
   &:hover {
@@ -20,12 +27,100 @@ const StyledButton = styled(Button)`
   }
 `;
 
+const contacts = [
+  {
+    _id: 1,
+    nickname: 'User 1',
+  },
+  {
+    _id: 2,
+    nickname: 'User 2',
+  },
+  {
+    _id: 3,
+    nickname: 'User 3',
+  },
+  {
+    _id: 1,
+    nickname: 'User 1',
+  },
+  {
+    _id: 2,
+    nickname: 'User 2',
+  },
+  {
+    _id: 3,
+    nickname: 'User 3',
+  },
+  {
+    _id: 1,
+    nickname: 'User 1',
+  },
+  {
+    _id: 2,
+    nickname: 'User 2',
+  },
+  {
+    _id: 3,
+    nickname: 'User 3',
+  },
+  {
+    _id: 1,
+    nickname: 'User 1',
+  },
+  {
+    _id: 2,
+    nickname: 'User 2',
+  },
+  {
+    _id: 3,
+    nickname: 'User 3',
+  },
+  {
+    _id: 1,
+    nickname: 'User 1',
+  },
+  {
+    _id: 2,
+    nickname: 'User 2',
+  },
+  {
+    _id: 3,
+    nickname: 'User 3',
+  },
+
+  {
+    _id: 1,
+    nickname: 'User 1',
+  },
+  {
+    _id: 2,
+    nickname: 'User 2',
+  },
+  {
+    _id: 3,
+    nickname: 'User 3',
+  },
+  {
+    _id: 1,
+    nickname: 'User 1',
+  },
+  {
+    _id: 2,
+    nickname: 'User 2',
+  },
+  {
+    _id: 3,
+    nickname: 'User 3',
+  },
+];
+
 export default function Chat() {
   const params = useParams();
   const socket = useRef();
   const dispatch = useDispatch();
   const currentUser = useSelector(selectUser);
-  const contacts = useSelector(selectContacts);
+  // const contacts = useSelector(selectContacts);
   const currentRole = useSelector(selectCurrentRole);
   const currentReceiver = useSelector(selectCurrentReceiver);
   const [messages, setMessages] = useState([]);
@@ -34,7 +129,7 @@ export default function Chat() {
   const receiverId = currentReceiver?._id || params.uid;
 
   useEffect(() => {
-    socket.current = io('http://10.1.106.147:3000/');
+    socket.current = io(baseURL);
     socket.current.emit('add-user', senderId);
     socket.current.on('msg-receive', (data) => {
       console.log({ dataReceived: data });
@@ -95,21 +190,21 @@ export default function Chat() {
     setIsStart(true);
   };
 
+  const handleChangeContact = (contactId) => {
+    dispatch(chatActions.setCurrentReceiver(contactId));
+  };
+
+  const conversationHeader =
+    currentRole === ROLE_LISTENER_STRING ? 'Người kể chuyện' : 'Người lắng nghe';
+
   return (
     <MuContainer>
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: '30% 1fr',
-          flex: 1,
-          borderTopLeftRadius: '10px',
-          borderTopRightRadius: '10px',
-          overflow: 'hidden',
-          marginTop: 5,
-        }}
-      >
-        <Contacts contacts={contacts} />
-        <ChatContainer>
+      <ChatWrapper sx={{ height: '100%', py: 3, display: 'flex' }}>
+        <ConversationSection>
+          <ConversationHeader title={conversationHeader} />
+          <ConversationList data={contacts} onChangeContact={handleChangeContact} />
+        </ConversationSection>
+        <ChatContainer sx={{}}>
           <div className='chat-header'>
             <Avatar />
             <h5>{currentReceiver?.nickname}</h5>
@@ -137,15 +232,17 @@ export default function Chat() {
             )}
           </Stack>
         </ChatContainer>
-      </Box>
+      </ChatWrapper>
     </MuContainer>
   );
 }
 
 const ChatContainer = styled.div`
-  background-color: white;
-  display: grid;
-  grid-template-rows: 60px 74vh 70px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
   .chat-header {
     display: flex;
     align-items: center;

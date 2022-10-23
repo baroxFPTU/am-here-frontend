@@ -18,6 +18,8 @@ const ChatListMessage = ({ messages, currentId }) => {
         px: 4,
         py: 2,
         background: '#fafafa',
+        maxHeight: '100%',
+        overflowY: 'auto',
       }}
     >
       {messages.map((message, index) => (

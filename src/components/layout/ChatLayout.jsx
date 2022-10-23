@@ -8,7 +8,7 @@ const ChatLayout = ({ children }) => {
   return (
     <>
       <Header />
-      <Box as='main' sx={{ pt: 8, flex: 1, display: 'flex' }}>
+      <Box as='main' sx={{ pt: 8, flex: 1, display: 'flex', maxHeight: '100%' }}>
         {children || <Outlet />}
       </Box>
     </>

@@ -51,7 +51,7 @@ const Home = () => {
           options={CATEGORIES}
           fallbackMessage='Không có bất kỳ sự lựa chọn nào.'
         />
-        <Container>
+        <Container sx={{ minHeight: '80vh' }}>
           <FilterBar selectFieldList={SELECT_FIELD_LIST} invisible={haveListeners} />
           <ListenerList listeners={listeners} haveListeners={haveListeners} />
         </Container>

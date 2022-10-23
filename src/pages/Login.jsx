@@ -1,6 +1,6 @@
 import { Box, Stack } from '@mui/material';
 import { REACT_APP_API_URL } from 'app/constant';
-import { auth } from 'app/firebase';
+import { auth } from 'configs/firebase';
 import axios from 'axios';
 import LoginForm from 'components/Form/LoginForm';
 import { authActions } from 'features/auth/authSlice';

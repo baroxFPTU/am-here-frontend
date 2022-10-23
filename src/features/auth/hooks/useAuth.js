@@ -1,4 +1,4 @@
-import { auth } from 'app/firebase';
+import { auth } from 'configs/firebase';
 import { authActions, selectUser } from 'features/auth/authSlice';
 import {
   createUserWithEmailAndPassword,
