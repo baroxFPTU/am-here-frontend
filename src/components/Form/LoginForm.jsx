@@ -1,9 +1,11 @@
-import { Button, Divider, Stack, TextField } from '@mui/material';
+import { Divider, Link, Stack, TextField } from '@mui/material';
 import { Typography } from '@mui/material';
 import GoogleIcon from 'assets/img/google-icon.png';
+import Button from 'components/common/Button';
 import { useRef } from 'react';
 import { FaFacebookF } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
+
 import styled from 'styled-components';
 
 const GoogleButton = styled(Button)`
@@ -60,7 +62,9 @@ const LoginForm = ({ onLoginWithPassword, onLoginWithGoogle, onLoginWithFacebook
             variant='outlined'
             inputRef={passwordInputRef}
           />
-          <Link>Bạn quên mật khẩu ư?</Link>
+          <Link component={RouterLink} to='/auth/forget-password'>
+            Bạn quên mật khẩu ư?
+          </Link>
 
           <Button
             type='submit'
@@ -73,12 +77,14 @@ const LoginForm = ({ onLoginWithPassword, onLoginWithGoogle, onLoginWithFacebook
         </Stack>
       </form>
 
-      <Divider>Hoặc</Divider>
       <Stack direction='row' justifyContent='center' spacing={2}>
         <Button sx={{ width: '100%' }}>
           <Link to='/auth/sign-up'>Đăng kí</Link>
         </Button>
       </Stack>
+      <Divider>Hoặc</Divider>
+      <GoogleButton onClick={handleClickLoginWithGoogle}>Tiếp tục với Google</GoogleButton>
+      <GoogleButton>Tiếp tục với Facebook</GoogleButton>
     </Stack>
   );
 };

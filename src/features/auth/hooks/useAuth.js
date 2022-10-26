@@ -1,4 +1,4 @@
-import { auth } from 'app/firebase';
+import { auth } from 'configs/firebase';
 import { authActions, selectUser } from 'features/auth/authSlice';
 import {
   createUserWithEmailAndPassword,
@@ -21,7 +21,7 @@ function useAuth() {
   const googleProvider = new GoogleAuthProvider();
   const facebookProvider = new FacebookAuthProvider();
 
-  const signIn = async (platform) => {
+  const signIn = async (platform, redirectPath) => {
     let provider = null;
 
     switch (platform) {
@@ -37,19 +37,20 @@ function useAuth() {
     }
     try {
       const response = await signInWithPopup(auth, provider);
+      navigate(redirectPath);
       if (!response) throw new Error('Could not sign in. Let try again.');
     } catch (error) {
       setError(error.message);
     }
   };
 
-  const signInWithGoogle = useCallback(async () => {
-    signIn('google');
+  const signInWithGoogle = useCallback(async (redirectPath = '/') => {
+    signIn('google', redirectPath);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const signInWithFacebook = useCallback(async () => {
-    signIn('facebook');
+  const signInWithFacebook = useCallback(async (redirectPath = '/') => {
+    signIn('facebook', redirectPath);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

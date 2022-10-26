@@ -1,6 +1,6 @@
 import { Box, Stack } from '@mui/material';
 import { REACT_APP_API_URL } from 'app/constant';
-import { auth } from 'app/firebase';
+import { auth } from 'configs/firebase';
 import axios from 'axios';
 import LoginForm from 'components/Form/LoginForm';
 import { authActions } from 'features/auth/authSlice';
@@ -14,13 +14,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const updateUser = (user) => {
-    if (!user) return;
-    console.log({ user });
-    dispatchUserData(user);
-    navigate('/');
-  };
-  const { user, error, signInWithGoogle, signInWithFacebook } = useAuth(updateUser);
+  const { user, error, signInWithGoogle, signInWithFacebook } = useAuth();
   const handleLoginWithPassword = async ({ email, password }) => {
     try {
       const credential = await signInWithEmailAndPassword(auth, email, password);
@@ -34,9 +28,9 @@ const Login = () => {
 
   const handleLoginWithGoogle = async () => {
     try {
-      signInWithGoogle();
-      dispatchUserData(user);
-      navigate('/');
+      await signInWithGoogle('/');
+      // dispatchUserData(user);
+      // navigate('/');
     } catch (error) {
       console.log(error);
     }
@@ -44,8 +38,8 @@ const Login = () => {
 
   const handleLoginWithFacebook = async () => {
     try {
-      signInWithFacebook();
-      dispatchUserData(user);
+      await signInWithFacebook();
+      // dispatchUserData(user);
       navigate('/');
     } catch (error) {
       console.log(error);

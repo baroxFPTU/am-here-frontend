@@ -1,9 +1,21 @@
-import { Grid, Pagination, Stack } from "@mui/material";
-import ListenerCard from "components/ListenerCard";
-import React from "react";
+import { Grid, Link, Pagination, Stack, Typography } from '@mui/material';
 
-const ListenerList = ({ listeners }) => {
-  return (
+import ListenerCard from 'components/ListenerCard';
+import { Link as RouterLink } from 'react-router-dom';
+
+const ListenerList = ({ listeners, haveListeners }) => {
+  const NotHaveListeners = (
+    <Stack direction='row' justifyContent='center' alignContent='center' p={6}>
+      <Typography>
+        Không có người lắng nghe nào.{' '}
+        <Link component={RouterLink} to='/#thanh-nguoi-lang-nghe'>
+          Trở thành người lắng nghe
+        </Link>
+      </Typography>
+    </Stack>
+  );
+
+  return haveListeners ? (
     <>
       <Grid container spacing={4}>
         {listeners.map((listener, index) => (
@@ -12,10 +24,12 @@ const ListenerList = ({ listeners }) => {
           </Grid>
         ))}
       </Grid>
-      <Stack direction="row" justifyContent="center">
+      <Stack direction='row' justifyContent='center'>
         <Pagination sx={{ p: 5 }} count={10} />
       </Stack>
     </>
+  ) : (
+    NotHaveListeners
   );
 };
 
