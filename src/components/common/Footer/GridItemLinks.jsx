@@ -9,8 +9,8 @@ const GridItemLinks = ({ label, links }) => {
           {label}
         </Typography>
         <List dense={true}>
-          {links.map((link) => (
-            <ListItem style={{ paddingLeft: 0 }} noPadding>
+          {links.map((link, index) => (
+            <ListItem key={index} style={{ paddingLeft: 0 }}>
               <GridItemLink href={link.href} label={link.label} />
             </ListItem>
           ))}

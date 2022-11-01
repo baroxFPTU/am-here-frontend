@@ -1,3 +1,4 @@
+import React from 'react';
 import Logout from '@mui/icons-material/Logout';
 import Settings from '@mui/icons-material/Settings';
 import Divider from '@mui/material/Divider';

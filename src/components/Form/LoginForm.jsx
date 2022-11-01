@@ -78,8 +78,8 @@ const LoginForm = ({ onLoginWithPassword, onLoginWithGoogle, onLoginWithFacebook
       </form>
 
       <Stack direction='row' justifyContent='center' spacing={2}>
-        <Button sx={{ width: '100%' }}>
-          <Link to='/auth/sign-up'>Đăng kí</Link>
+        <Button sx={{ width: '100%' }} component={RouterLink} to='/auth/sign-up'>
+          Đăng kí
         </Button>
       </Stack>
       <Divider>Hoặc</Divider>

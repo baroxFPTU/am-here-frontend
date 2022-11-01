@@ -1,12 +1,22 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import createSagaMiddleware from 'redux-saga';
 import counterReducer from 'features/counter/counterSlice';
 import authReducer from 'features/auth/authSlice';
 import chatReducer from 'features/chat/chatSlice';
+import rootSaga from './rootSaga';
+
+const rootReducer = combineReducers({
+  counter: counterReducer,
+  auth: authReducer,
+  chat: chatReducer,
+});
+const sagaMiddleware = createSagaMiddleware();
 
 export const store = configureStore({
-  reducer: {
-    counter: counterReducer,
-    auth: authReducer,
-    chat: chatReducer,
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) => {
+    return getDefaultMiddleware().concat(sagaMiddleware);
   },
 });
+
+sagaMiddleware.run(rootSaga);

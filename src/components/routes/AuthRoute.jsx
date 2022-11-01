@@ -8,7 +8,6 @@ const AuthRoute = ({ redirectPath }) => {
   const isAuthenticating = useSelector(selectIsAuthenticating);
 
   if (isAuthenticating) return null;
-
   return !isAuthenticated ? <Outlet /> : <Navigate to={redirectPath || '/'} />;
 };
 

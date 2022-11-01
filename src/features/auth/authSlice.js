@@ -2,7 +2,6 @@ import { createSelector, createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   user: null,
-  activeRole: null,
   isAuthenticating: true,
 };
 
@@ -17,8 +16,31 @@ export const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
     },
-    setActiveRole: (state, action) => {
-      state.activeRole = action.payload;
+    signInWithPasswordAsync: (state, action) => {
+      state.isAuthenticating = true;
+    },
+    signInWithPasswordAsyncSuccess: (state, action) => {
+      state.isAuthenticating = false;
+      state.user = action.payload;
+    },
+    signInWithPasswordAsyncError: (state) => {
+      state.isAuthenticating = false;
+    },
+    signUpWithPasswordAsync: (state, action) => {
+      state.isAuthenticating = true;
+    },
+    signUpWithPasswordAsyncError: (state, action) => {
+      state.isAuthenticating = false;
+    },
+    signInWithProviderAsync: (state, action) => {
+      state.isAuthenticating = true;
+    },
+    signInWithProviderAsyncSuccess: (state, action) => {
+      state.isAuthenticating = false;
+      state.user = action.payload;
+    },
+    signInWithProviderAsyncError: (state, action) => {
+      state.isAuthenticating = false;
     },
     setUserId: (state, action) => {
       state.user.id = action.payload;

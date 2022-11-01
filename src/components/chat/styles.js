@@ -9,3 +9,11 @@ export const ChatWrapper = styled(Box)`
   flex: 1;
   overflow: hidden;
 `;
+
+export const ChatContainer = styled(Box)`
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+`;

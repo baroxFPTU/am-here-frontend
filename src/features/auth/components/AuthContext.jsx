@@ -1,30 +1,29 @@
 import { CircularProgress, Stack } from '@mui/material';
+import { axiosClient } from 'app/axiosClient';
 import { onAuthStateChanged } from 'firebase/auth';
-import { useEffect } from 'react';
+import { memo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { put } from 'redux-saga/effects';
 import { authActions, selectIsAuthenticating } from '../authSlice';
 
 const AuthContext = ({ auth, children }) => {
   const isAuthenticating = useSelector(selectIsAuthenticating);
   const dispatch = useDispatch();
-  useEffect(() => {
-    const unregistered = onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        return dispatch(authActions.selectIsAuthenticating(false));
-      }
-      dispatch(
-        authActions.login({
-          id: user.uid,
-          nickname: user.displayName,
-          photoURL: user.photoURL,
-        })
-      );
-    });
 
-    return () => {
-      unregistered();
-    };
-  }, [dispatch, auth]);
+  useEffect(() => {
+    const unregistered = onAuthStateChanged(
+      auth,
+      async (user) => {
+        if (!user) {
+          return dispatch(authActions.selectIsAuthenticating(false));
+        }
+        dispatch(authActions.signInWithPasswordAsync(user.accessToken));
+      },
+      []
+    );
+
+    unregistered();
+  }, []);
 
   if (isAuthenticating)
     return (
@@ -36,4 +35,4 @@ const AuthContext = ({ auth, children }) => {
   return <>{!isAuthenticating && children}</>;
 };
 
-export default AuthContext;
+export default memo(AuthContext);

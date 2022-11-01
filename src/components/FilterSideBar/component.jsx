@@ -11,7 +11,9 @@ const FilterSideBar = ({ label = 'Filter sidebar', options, fallbackMessage }) =
       </Typography>
       <List>
         {options &&
-          options.map((item) => <CategoryWithCheckbox label={item.label} value={item.value} />)}
+          options.map((item) => (
+            <CategoryWithCheckbox key={item.value} label={item.label} value={item.value} />
+          ))}
         {!options && <Typography>{fallbackMessage}</Typography>}
       </List>
     </Box>

@@ -1,12 +1,9 @@
 import { Box, Stack } from '@mui/material';
-import { REACT_APP_API_URL } from 'app/constant';
-import { auth } from 'configs/firebase';
-import axios from 'axios';
 import LoginForm from 'components/Form/LoginForm';
+import { auth } from 'configs/firebase';
 import { authActions } from 'features/auth/authSlice';
 import useAuth from 'features/auth/hooks/useAuth';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,12 +11,11 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { user, error, signInWithGoogle, signInWithFacebook } = useAuth();
+  const { signInWithGoogle, signInWithFacebook } = useAuth();
   const handleLoginWithPassword = async ({ email, password }) => {
     try {
       const credential = await signInWithEmailAndPassword(auth, email, password);
-      const userData = credential.user;
-      dispatchUserData(userData);
+      dispatch(authActions.signInWithPasswordAsync(credential.user.accessToken));
       navigate(-1);
     } catch (error) {
       console.error(error);
@@ -28,7 +24,14 @@ const Login = () => {
 
   const handleLoginWithGoogle = async () => {
     try {
-      await signInWithGoogle('/');
+      const response = await signInWithGoogle();
+      console.log('dispatch');
+      dispatch(
+        authActions.signInWithProviderAsync({
+          token: response.user.accessToken,
+          provider_type: 'google.com',
+        })
+      );
       // dispatchUserData(user);
       // navigate('/');
     } catch (error) {
@@ -43,33 +46,6 @@ const Login = () => {
       navigate('/');
     } catch (error) {
       console.log(error);
-    }
-  };
-
-  const dispatchUserData = async (userData) => {
-    console.log({ userData });
-    try {
-      if (!userData) return;
-      const response = await axios.post(`${REACT_APP_API_URL}/user`, {
-        nickname: userData.displayName,
-        uid: userData.uid,
-        email: userData.email,
-      });
-      const result = await response.data;
-      console.log({ result });
-      dispatch(
-        authActions.login({
-          id: result._id,
-          uid: userData.uid,
-          nickname: result.nickname,
-          photoURL: result.photoURL,
-          email: result.email,
-          active_role: result.active_role,
-        })
-      );
-      localStorage.setItem('active_role', result.active_role);
-    } catch (error) {
-      throw new Error(error);
     }
   };
 

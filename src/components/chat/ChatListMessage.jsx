@@ -23,7 +23,8 @@ const ChatListMessage = ({ messages, currentId }) => {
       }}
     >
       {messages.map((message, index) => (
-        <ChatMessage key={index} data={message} isSender={Boolean(currentId === message.sender)} />
+        // <ChatMessage key={index} data={message} isSender={Boolean(currentId === message.sender)} />
+        <ChatMessage key={index} data={message} isSender={message.isSender} /> // just for tét
       ))}
       <div ref={bottomRef} />
     </Box>

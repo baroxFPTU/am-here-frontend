@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const baseURL = process.env.REACT_APP_API_URL || 'http://10.1.106.147:3000';
+export const baseURL = process.env.REACT_APP_API_URL;
 
 /**
  * Axios Config used for almost request
