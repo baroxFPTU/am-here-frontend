@@ -1,3 +1,4 @@
+import React from 'react';
 import AuthLayout from 'components/layout/AuthLayout';
 import ChatLayout from 'components/layout/ChatLayout';
 import PrivateRoute from 'components/routes/PrivateRoute';

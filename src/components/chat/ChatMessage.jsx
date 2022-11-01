@@ -16,7 +16,15 @@ const ChatMessage = ({ data, isSender }) => {
         sx={{ my: 2 }}
       >
         <Box>
-          <Typography variant='h3' sx={{ fontSize: '15px', display: 'block', mb: 1 }}>
+          <Typography
+            variant='h3'
+            sx={{
+              fontSize: '15px',
+              display: 'block',
+              mb: 1,
+              textAlign: isSender ? 'right' : 'left',
+            }}
+          >
             {isSender ? user?.nickname : currentReceiver?.nickname || 'User'}
           </Typography>
           <Typography

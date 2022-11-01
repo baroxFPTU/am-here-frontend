@@ -1,3 +1,4 @@
+import React from 'react';
 import { Container } from '@mui/material';
 import Banner from 'components/Banner';
 import Section from 'components/common/Section';

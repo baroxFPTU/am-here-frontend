@@ -18,7 +18,6 @@ const CategoryWithCheckbox = ({ label, value }) => {
         control={<Checkbox value={value} />}
         labelPlacement='start'
         sx={{ width: '100%', justifyContent: 'space-between', marginLeft: 0 }}
-        disableMargin
       />
     </CategoryWithCheckboxStyled>
   );

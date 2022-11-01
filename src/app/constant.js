@@ -91,3 +91,112 @@ export const SELECT_FIELD_LIST = [
     ],
   },
 ];
+
+export const CONVERSATION_EXAMPLE = [
+  {
+    _id: 1,
+    nickname: 'User 1',
+  },
+  {
+    _id: 2,
+    nickname: 'User 2',
+  },
+  {
+    _id: 3,
+    nickname: 'User 3',
+  },
+  {
+    _id: 1,
+    nickname: 'User 1',
+  },
+  {
+    _id: 2,
+    nickname: 'User 2',
+  },
+  {
+    _id: 3,
+    nickname: 'User 3',
+  },
+  {
+    _id: 1,
+    nickname: 'User 1',
+  },
+  {
+    _id: 2,
+    nickname: 'User 2',
+  },
+  {
+    _id: 3,
+    nickname: 'User 3',
+  },
+  {
+    _id: 1,
+    nickname: 'User 1',
+  },
+  {
+    _id: 2,
+    nickname: 'User 2',
+  },
+  {
+    _id: 3,
+    nickname: 'User 3',
+  },
+  {
+    _id: 1,
+    nickname: 'User 1',
+  },
+  {
+    _id: 2,
+    nickname: 'User 2',
+  },
+  {
+    _id: 3,
+    nickname: 'User 3',
+  },
+
+  {
+    _id: 1,
+    nickname: 'User 1',
+  },
+  {
+    _id: 2,
+    nickname: 'User 2',
+  },
+  {
+    _id: 3,
+    nickname: 'User 3',
+  },
+  {
+    _id: 1,
+    nickname: 'User 1',
+  },
+  {
+    _id: 2,
+    nickname: 'User 2',
+  },
+  {
+    _id: 3,
+    nickname: 'User 3',
+  },
+];
+
+export const CHAT_SAMPLE = [
+  {
+    id: 1,
+    nickname: 'Barox',
+    message: 'Hello World',
+    isSender: true,
+  },
+  {
+    id: 2,
+    nickname: 'Ngyn',
+    message: 'Hi',
+    isSender: false,
+  },
+  {
+    id: 3,
+    nickname: 'Barox',
+    message: 'I love you',
+    isSender: true,
+  },
+];

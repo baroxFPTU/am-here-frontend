@@ -1,9 +1,11 @@
 import { auth } from 'configs/firebase';
 import { authActions, selectUser } from 'features/auth/authSlice';
 import {
+  browserSessionPersistence,
   createUserWithEmailAndPassword,
   FacebookAuthProvider,
   GoogleAuthProvider,
+  setPersistence,
   signInWithPopup,
   signOut,
   updateProfile,
@@ -37,15 +39,16 @@ function useAuth() {
     }
     try {
       const response = await signInWithPopup(auth, provider);
-      navigate(redirectPath);
+      if (redirectPath) navigate(redirectPath);
       if (!response) throw new Error('Could not sign in. Let try again.');
+      return response;
     } catch (error) {
       setError(error.message);
     }
   };
 
   const signInWithGoogle = useCallback(async (redirectPath = '/') => {
-    signIn('google', redirectPath);
+    return signIn('google', redirectPath);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -54,16 +57,20 @@ function useAuth() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const signUpWithPassword = useCallback(async ({ email, password, displayName, photoURL }) => {
-    try {
-      const response = await createUserWithEmailAndPassword(auth, email, password);
-      console.log(response);
-      updateUserData({ displayName: displayName, photoURL: photoURL });
-    } catch (error) {
-      throw new Error(error);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const signUpWithPassword = useCallback(
+    async ({ email, password, displayName, photoURL }, callback) => {
+      try {
+        const persistenceConfig = browserSessionPersistence;
+        await setPersistence(auth, persistenceConfig);
+        const response = await createUserWithEmailAndPassword(auth, email, password);
+        callback(response);
+      } catch (error) {
+        throw new Error(error);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    []
+  );
 
   const updateUserData = useCallback(async ({ displayName, photoURL }) => {
     updateProfile(auth.currentUser, {
@@ -76,7 +83,7 @@ function useAuth() {
     await signOut(auth);
     const action = authActions.logout();
     dispatch(action);
-    navigate('/');
+    navigate('/auth/login');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

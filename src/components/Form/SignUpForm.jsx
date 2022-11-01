@@ -18,6 +18,8 @@ import { useNavigate } from 'react-router-dom';
 import { getAuth, updateProfile } from 'firebase/auth';
 import { useDispatch } from 'react-redux';
 import { authActions } from 'features/auth/authSlice';
+import { axiosClient } from 'app/axiosClient';
+import moment from 'moment';
 
 const steps = [
   {
@@ -39,8 +41,9 @@ const steps = [
 
 const SignUpForm = () => {
   const [activeStep, setActiveStep] = React.useState(0);
-  const { user, signUpWithPassword, updateUserData } = useAuth();
+  const { user, signUpWithPassword } = useAuth();
   const [selectedRole, setSelectedRole] = React.useState(null);
+  const [roles, setRoles] = React.useState([]);
   const registerData = React.useRef(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -54,6 +57,14 @@ const SignUpForm = () => {
     gender: 'female',
   };
 
+  React.useEffect(() => {
+    (async () => {
+      const response = await axiosClient.get('/roles');
+      console.log(response.data);
+      setRoles(response.data);
+    })();
+  }, []);
+
   const handleNext = (formValues) => {
     if (formValues) {
       registerData.current = {
@@ -66,39 +77,25 @@ const SignUpForm = () => {
     if (role) {
       registerData.current = {
         ...registerData.current,
-        active_role: role,
+        role_id: role,
       };
     }
-    localStorage.setItem('active_role', role);
+    localStorage.setItem('role_id', role);
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
   const handleSubmitCategories = async (categories) => {
     try {
-      console.log(categories);
       registerData.current = {
         ...registerData.current,
         categories,
       };
 
-      signUpWithPassword({
-        email: registerData.current.email,
-        password: registerData.current.password,
-        displayName: registerData.current.nickname,
-        photoURL: 'https://source.unsplash.com/random',
-      });
-      console.log(registerData.current.active_role);
-      dispatch(authActions.setActiveRole(registerData.current.active_role));
-      const response = await axios.post(`${REACT_APP_API_URL}/user`, {
-        nickname: registerData.current.nickname,
-        uid: user.uid,
-        email: registerData.current.email,
-        active_role: registerData.current.active_role,
-      });
-      navigate('/');
+      registerData.current.birthday = moment(registerData.current.birthday).format();
+      dispatch(authActions.signUpWithPasswordAsync(registerData.current));
     } catch (error) {
       console.log(error);
-      navigate('/');
+      // navigate('/');
     }
   };
 
@@ -150,12 +147,16 @@ const SignUpForm = () => {
             <Box sx={{ mb: 2 }}>
               <div>
                 <Stack spacing={2} sx={{ my: 2 }}>
-                  <Button variant='outlined' onClick={() => setSelectedRole(ROLE_MEMBER_STRING)}>
-                    Người nói
-                  </Button>
-                  <Button variant='outlined' onClick={() => setSelectedRole(ROLE_LISTENER_STRING)}>
-                    Người nghe
-                  </Button>
+                  {roles &&
+                    roles.map((role) => (
+                      <Button
+                        key={role._id}
+                        variant='outlined'
+                        onClick={() => setSelectedRole(role._id)}
+                      >
+                        {role.name}
+                      </Button>
+                    ))}
                 </Stack>
                 <Button
                   variant='contained'

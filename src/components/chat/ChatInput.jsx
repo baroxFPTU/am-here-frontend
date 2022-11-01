@@ -1,7 +1,6 @@
-import { Box, Button, Input, TextField } from '@mui/material';
+import { Box, Button, TextField } from '@mui/material';
 import { useRef } from 'react';
 import { FaRegSmileBeam } from 'react-icons/fa';
-import { IoSend } from 'react-icons/io5';
 import styled from 'styled-components';
 
 function ChatInput({ onSendMessage }) {
