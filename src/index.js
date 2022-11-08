@@ -11,11 +11,11 @@ const container = document.getElementById('root');
 const root = createRoot(container);
 
 root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <AuthContext auth={getAuth()}>
-        <App />
-      </AuthContext>
-    </Provider>
-  </React.StrictMode>
+  // <React.StrictMode>
+  <Provider store={store}>
+    <AuthContext auth={getAuth()}>
+      <App />
+    </AuthContext>
+  </Provider>
+  // </React.StrictMode>
 );

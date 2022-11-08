@@ -1,6 +1,6 @@
-export const ROLE_MEMBER_STRING = 'member';
-export const ROLE_LISTENER_STRING = 'listener';
-export const REACT_APP_API_URL = 'http://10.1.106.147:3000/api';
+export const ROLE_MEMBER_STRING = 'nguoi-ke-chuyen';
+export const ROLE_LISTENER_STRING = 'nguoi-lang-nghe';
+export const REACT_APP_API_URL = 'http://localhost:4000/api';
 
 export const APP_ROUTES = {
   login: '/auth/login',
@@ -93,79 +93,6 @@ export const SELECT_FIELD_LIST = [
 ];
 
 export const CONVERSATION_EXAMPLE = [
-  {
-    _id: 1,
-    nickname: 'User 1',
-  },
-  {
-    _id: 2,
-    nickname: 'User 2',
-  },
-  {
-    _id: 3,
-    nickname: 'User 3',
-  },
-  {
-    _id: 1,
-    nickname: 'User 1',
-  },
-  {
-    _id: 2,
-    nickname: 'User 2',
-  },
-  {
-    _id: 3,
-    nickname: 'User 3',
-  },
-  {
-    _id: 1,
-    nickname: 'User 1',
-  },
-  {
-    _id: 2,
-    nickname: 'User 2',
-  },
-  {
-    _id: 3,
-    nickname: 'User 3',
-  },
-  {
-    _id: 1,
-    nickname: 'User 1',
-  },
-  {
-    _id: 2,
-    nickname: 'User 2',
-  },
-  {
-    _id: 3,
-    nickname: 'User 3',
-  },
-  {
-    _id: 1,
-    nickname: 'User 1',
-  },
-  {
-    _id: 2,
-    nickname: 'User 2',
-  },
-  {
-    _id: 3,
-    nickname: 'User 3',
-  },
-
-  {
-    _id: 1,
-    nickname: 'User 1',
-  },
-  {
-    _id: 2,
-    nickname: 'User 2',
-  },
-  {
-    _id: 3,
-    nickname: 'User 3',
-  },
   {
     _id: 1,
     nickname: 'User 1',

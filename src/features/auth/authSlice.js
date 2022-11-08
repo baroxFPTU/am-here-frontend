@@ -65,6 +65,6 @@ export const selectAuthenticated = createSelector(
     return !isAuthenticating && user;
   }
 );
-export const selectCurrentRole = (state) => state.auth.user?.active_role;
+export const selectCurrentRole = (state) => state.auth.user?.role_data;
 
 export default authSlice.reducer;

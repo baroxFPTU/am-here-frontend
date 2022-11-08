@@ -22,7 +22,7 @@ const ConversationList = ({ data, onChangeContact }) => {
           key={contact._id}
           data={contact}
           onChangeSelectContact={onChangeContact}
-          isSelected={isSelected(contact?._id)}
+          isSelected={isSelected(contact?.id)}
         />
       ))}
     </ConversationListWrapper>
