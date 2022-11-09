@@ -35,6 +35,7 @@ function* signUpWithPasswordAsync(action) {
       role_id: user.role_id,
       categories: user.categories,
     });
+    console.log({ response });
     yield put(authActions.signInWithPasswordAsyncSuccess(response.data));
   } catch (error) {
     yield put(authActions.signUpWithPasswordAsyncError());

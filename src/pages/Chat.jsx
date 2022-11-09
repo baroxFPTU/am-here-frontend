@@ -20,6 +20,7 @@ import { selectCurrentRole, selectUser } from 'features/auth/authSlice';
 import {
   chatActions,
   selectConversations,
+  selectCurrentConversation,
   selectCurrentReceiver,
   selectMessages,
 } from 'features/chat/chatSlice';
@@ -40,12 +41,14 @@ export default function Chat() {
   const dispatch = useDispatch();
   const currentUser = useSelector(selectUser);
   const currentRole = useSelector(selectCurrentRole);
+  const currentConversation = useSelector(selectCurrentConversation);
   const messages = useSelector(selectMessages);
   const selectedUser = useState(null);
   const currentReceiver = useSelector(selectCurrentReceiver);
   const [isStart, setIsStart] = useState(false);
   const conversations = useSelector(selectConversations);
   const senderId = currentUser.id;
+
   useEffect(() => {
     socketRef.current = socketIOClient.connect(baseURL);
 
@@ -69,11 +72,11 @@ export default function Chat() {
     if (isTeller) {
       console.log('wait for update listeners');
       socketRef.current.on('server-update-online-listeners', (onlineListeners) => {
-        dispatch(chatActions.setConversations(onlineListeners));
+        // dispatch(chatActions.setConversations(onlineListeners));
       });
     } else if (isListener) {
       socketRef.current.on('server-update-online-tellers', (onlineTellers) => {
-        dispatch(chatActions.setConversations(onlineTellers));
+        // dispatch(chatActions.setConversations(onlineTellers));
       });
     }
 
@@ -84,31 +87,49 @@ export default function Chat() {
     };
   }, []);
 
+  useEffect(() => {
+    const { uid } = params;
+    dispatch(chatActions.startConversationAsync({ uid: currentUser.id, cw: uid }));
+    dispatch(chatActions.loadConversations({ uid: currentUser.id }));
+  }, []);
+
+  useEffect(() => {
+    if (currentConversation?._id) {
+      socketRef.current.emit('client-join-room', currentConversation._id);
+      // dispatch(chatActions.loadMessageAsync(currentConversation._id));
+    }
+  }, [currentConversation]);
+
   const handleSendMessage = (message) => {
+    if (message.trim() === '') return;
     const data = {
-      id: uuidv4(),
       senderId: currentUser.id,
-      message: message,
+      message: message.trim(),
       createdAt: moment(Date.now()).toDate(),
     };
     socketRef.current.emit('client-send-message', data);
   };
-  const handleChangeContact = (contactId) => {
-    socketRef.current.emit('client-get-conversation-message', 'room-1');
-    dispatch(chatActions.setCurrentReceiver(contactId));
+  const handleChangeConversation = (conversation) => {
+    socketRef.current.emit('client-get-conversation-message', conversation._id);
+    dispatch(chatActions.setCurrentConversation(conversation));
+    dispatch(chatActions.setCurrentReceiver(conversation));
   };
 
   const conversationHeader =
     currentRole.slug === ROLE_LISTENER_STRING ? 'Người kể chuyện' : 'Người lắng nghe';
 
   const isShowChatStartModal = !isStart && currentRole.slug === ROLE_MEMBER_STRING;
-  console.log({ messages });
   return (
     <MuContainer>
       <ChatWrapper sx={{ height: '100%', py: 3, display: 'flex' }}>
         <ConversationSection>
           <ConversationHeader title={conversationHeader} />
-          {<ConversationList data={conversations} onChangeContact={handleChangeContact} />}
+          {
+            <ConversationList
+              data={conversations}
+              onChangeConversation={handleChangeConversation}
+            />
+          }
         </ConversationSection>
         <ChatContainer>
           <ChatHeader currentReceiver={currentReceiver} />

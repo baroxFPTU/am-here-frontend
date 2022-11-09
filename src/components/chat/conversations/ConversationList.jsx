@@ -4,25 +4,22 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import Contact from '../Contact';
 
-const ConversationList = ({ data, onChangeContact }) => {
+const ConversationList = ({ data, onChangeConversation }) => {
   const currentReceiver = useSelector(selectCurrentReceiver);
-
-  const isSelected = (contactId) => {
+  const isSelected = (conversationId) => {
     if (!currentReceiver) return false;
 
-    return Boolean(
-      (typeof currentReceiver === 'string' ? currentReceiver : currentReceiver?._id) === contactId
-    );
+    return Boolean(currentReceiver?._id === conversationId);
   };
 
   return (
     <ConversationListWrapper>
-      {data.map((contact) => (
+      {data.map((conversation) => (
         <Contact
-          key={contact._id}
-          data={contact}
-          onChangeSelectContact={onChangeContact}
-          isSelected={isSelected(contact?.id)}
+          key={conversation._id}
+          data={conversation}
+          onChangeSelectContact={() => onChangeConversation(conversation)}
+          isSelected={isSelected(conversation?._id)}
         />
       ))}
     </ConversationListWrapper>

@@ -5,7 +5,7 @@ import styled from 'styled-components';
 const ChatHeader = ({ currentReceiver }) => {
   return (
     <StyledChatHeader>
-      <Avatar />
+      {currentReceiver && <Avatar />}
       <h5>{currentReceiver?.nickname}</h5>
     </StyledChatHeader>
   );

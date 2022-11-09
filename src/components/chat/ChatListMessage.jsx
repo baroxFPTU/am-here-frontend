@@ -10,7 +10,7 @@ const ChatListMessage = ({ messages, currentId }) => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  if (!messages || messages.length === 0) {
+  if (!messages) {
     return <p>Let have a chat</p>;
   }
 
