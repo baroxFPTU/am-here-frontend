@@ -49,11 +49,12 @@ export default function Chat() {
     });
 
     socketRef.current.on('server-exchange-message', (data) => {
-      console.log({ data, currentConversation });
-      if (data.sender_id !== currentUser.id && currentConversation) {
+      console.log({ data, currentUser, currentConversation });
+      if (data.sender_id !== currentUser.id) {
         dispatch(chatActions.addMessage({ conversationId: data.conversation_id, data }));
       }
     });
+
     return () => {
       socketRef.current.disconnect({
         role_slug: currentRole.slug,
@@ -82,7 +83,7 @@ export default function Chat() {
       conversation_id: currentConversation._id,
     };
     socketRef.current.emit('client-send-message', data);
-    dispatch(chatActions.addMessage({ conversationId: currentConversation._id, data }));
+    dispatch(chatActions.addMessage({ conversationId: data.conversation_id, data }));
   };
   const handleChangeConversation = (conversation) => {
     // dispatch(chatActions.clearMessages(currentConversation._id));
