@@ -19,6 +19,7 @@ const StyledChatHeader = styled.div`
   gap: 10px;
   background-color: #7db4bb;
   color: #fff;
+  flex-shrink: 0;
   h5 {
     font-size: 17px;
     font-weight: 600;

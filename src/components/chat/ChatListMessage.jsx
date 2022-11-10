@@ -30,7 +30,7 @@ const ChatListMessage = ({ messages, currentId }) => {
         <ChatMessage
           key={index}
           data={message}
-          isSender={Boolean(currentId === message.senderId)}
+          isSender={Boolean(currentId === message.sender_id)}
         />
         // <ChatMessage key={index} data={message} isSender={message.isSender} /> // just for tét
       ))}

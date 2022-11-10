@@ -5,7 +5,7 @@ const initialState = {
   currentReceiver: null,
   currentConversation: null,
   conversations: [],
-  messages: [],
+  messages: {},
 };
 
 const chatSlice = createSlice({
@@ -31,13 +31,23 @@ const chatSlice = createSlice({
       state.currentConversation = action.payload;
     },
     setMessages: (state, action) => {
-      state.messages = action.payload;
+      const { conversationId, data } = action.payload;
+      const currentMessages = state.messages;
+      currentMessages[conversationId] = data;
+      state.messages = currentMessages;
     },
     addMessage: (state, action) => {
-      state.messages.push(action.payload);
+      const { conversationId, data } = action.payload;
+      const isExistConversationMessages = conversationId in state.messages;
+      if (isExistConversationMessages) {
+        state.messages[conversationId].push(data);
+      } else {
+        state.messages[conversationId] = [data];
+      }
     },
-    clearMessages: (state) => {
-      state.messages = [];
+    clearMessages: (state, action) => {
+      const conversationId = action.payload;
+      state.messages[conversationId] = [];
     },
     setCurrentReceiver: (state, action) => {
       state.currentReceiver = action.payload;
@@ -61,4 +71,11 @@ export const selectCurrentConversation = (state) => state.chat.currentConversati
 export const selectCurrentReceiver = (state) => state.chat.currentReceiver;
 export const selectConversations = (state) => state.chat.conversations;
 export const selectMessages = (state) => state.chat.messages;
+export const selectCurrentConversationMessages = createSelector(
+  selectCurrentConversation,
+  selectMessages,
+  (currentConversation, messages) => {
+    return messages[currentConversation?._id] || [];
+  }
+);
 export default chatSlice.reducer;

@@ -24,11 +24,11 @@ function* startConversationAsync(action) {
 function* loadMessageAsync(action) {
   const { conversationId } = action.payload;
   const query = queryString.stringify({
-    conversation_id: conversationId,
+    id: conversationId,
   });
   try {
     const messagesResponse = yield call(axiosClient.get, `/chat?${query}`);
-    yield put(chatActions.setMessages(messagesResponse.data));
+    yield put(chatActions.setMessages({ conversationId, data: messagesResponse.data }));
   } catch (error) {}
 }
 
