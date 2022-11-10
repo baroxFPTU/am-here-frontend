@@ -37,7 +37,7 @@ const ChatMessage = ({ data, isSender }) => {
               borderRadius: 2,
             }}
           >
-            {data.message}
+            {data.body}
           </Typography>
         </Box>
       </Stack>

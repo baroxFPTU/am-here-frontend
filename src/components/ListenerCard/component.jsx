@@ -27,7 +27,7 @@ const ListenerCard = ({ data }) => {
       </Link>
 
       <CardContent sx={{ paddingTop: '120px' }}>
-        <Link to={`/chat/${data._id}`}>
+        <Link to={`/chat/${data.uid}`}>
           <Typography gutterBottom variant='h5' component='div'>
             {data?.nickname || 'Listener'}
           </Typography>

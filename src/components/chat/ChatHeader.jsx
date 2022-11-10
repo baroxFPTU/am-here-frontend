@@ -5,7 +5,7 @@ import styled from 'styled-components';
 const ChatHeader = ({ currentReceiver }) => {
   return (
     <StyledChatHeader>
-      <Avatar />
+      {currentReceiver && <Avatar />}
       <h5>{currentReceiver?.nickname}</h5>
     </StyledChatHeader>
   );
@@ -19,6 +19,7 @@ const StyledChatHeader = styled.div`
   gap: 10px;
   background-color: #7db4bb;
   color: #fff;
+  flex-shrink: 0;
   h5 {
     font-size: 17px;
     font-weight: 600;

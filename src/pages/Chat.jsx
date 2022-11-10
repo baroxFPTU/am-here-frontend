@@ -1,131 +1,118 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Container as MuContainer, Stack } from '@mui/material';
-import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { io } from 'socket.io-client';
+import socketIOClient from 'socket.io-client';
 
 import { baseURL } from 'app/axiosClient';
-import {
-  CHAT_SAMPLE,
-  CONVERSATION_EXAMPLE,
-  REACT_APP_API_URL,
-  ROLE_LISTENER_STRING,
-  ROLE_MEMBER_STRING,
-} from 'app/constant';
+import { ROLE_LISTENER_STRING, ROLE_MEMBER_STRING } from 'app/constant';
 
 import { selectCurrentRole, selectUser } from 'features/auth/authSlice';
-import { chatActions, selectCurrentReceiver } from 'features/chat/chatSlice';
+import {
+  chatActions,
+  selectConversations,
+  selectCurrentConversation,
+  selectCurrentConversationMessages,
+  selectCurrentReceiver,
+  selectMessages,
+} from 'features/chat/chatSlice';
 
 import ChatHeader from 'components/chat/ChatHeader';
 import ChatInput from 'components/chat/ChatInput';
 import ChatListMessage from 'components/chat/ChatListMessage';
-import ChatStartModal from 'components/chat/ChatStartModal';
 import ConversationHeader from 'components/chat/conversations/ConversationHeader';
 import ConversationList from 'components/chat/conversations/ConversationList';
 import { ConversationSection } from 'components/chat/conversations/styles';
 import { ChatContainer, ChatWrapper } from 'components/chat/styles';
+import moment from 'moment/moment';
 
 export default function Chat() {
   const params = useParams();
-  const socket = useRef();
+  const socketRef = useRef();
   const dispatch = useDispatch();
   const currentUser = useSelector(selectUser);
-  // const contacts = useSelector(selectContacts);
   const currentRole = useSelector(selectCurrentRole);
-  const currentReceiver = useSelector(selectCurrentReceiver);
-  const [messages, setMessages] = useState([]);
-  const [isStart, setIsStart] = useState(false);
+  const currentConversation = useSelector(selectCurrentConversation);
+  const messages = useSelector(selectCurrentConversationMessages);
+  const conversations = useSelector(selectConversations);
   const senderId = currentUser.id;
-  const receiverId = currentReceiver?._id || params.uid;
-
-  // useEffect(() => {
-  //   socket.current = io(baseURL);
-  //   socket.current.emit('add-user', senderId);
-  //   socket.current.on('msg-receive', (data) => {
-  //     console.log({ dataReceived: data });
-  //     pushMessageToState(data);
-  //   });
-  //   (async () => {
-  //     try {
-  //       const url =
-  //         currentRole === ROLE_MEMBER_STRING
-  //           ? `${REACT_APP_API_URL}/conversation?senderId=${senderId}`
-  //           : `${REACT_APP_API_URL}/conversation/listener?receiverId=${senderId}`;
-  //       const response = await axios.get(url);
-  //       const currentReceiver = params.uid || response.data[0];
-  //       dispatch(
-  //         chatActions.setData({
-  //           contacts: response.data,
-  //           currentReceiver: currentReceiver,
-  //         })
-  //       );
-
-  //       const conversationResponse = await axios.post(`${REACT_APP_API_URL}/message/getmsg`, {
-  //         sender: senderId,
-  //         receiver: receiverId,
-  //       });
-  //       setMessages(conversationResponse.data);
-  //     } catch (error) {
-  //       throw new Error(error);
-  //     }
-  //   })();
-  // }, [isStart, currentUser, dispatch]);
 
   useEffect(() => {
-    (async () => {
-      if (currentReceiver) {
-        const conversationResponse = await axios.post(`${REACT_APP_API_URL}/message/getmsg`, {
-          sender: senderId,
-          receiver: receiverId,
-        });
-        setMessages(conversationResponse.data);
+    socketRef.current = socketIOClient.connect(baseURL);
+
+    socketRef.current.emit('client-auth', {
+      uid: currentUser.id,
+      nickname: currentUser.nickname,
+      role_data: currentRole,
+      socket_id: socketRef.current.id,
+    });
+
+    socketRef.current.on('server-exchange-message', (data) => {
+      console.log({ data, currentConversation });
+      if (data.sender_id !== currentUser.id && currentConversation) {
+        dispatch(chatActions.addMessage({ conversationId: data.conversation_id, data }));
       }
-    })();
-  }, [currentReceiver, currentUser]);
+    });
+    return () => {
+      socketRef.current.disconnect({
+        role_slug: currentRole.slug,
+      });
+    };
+  }, []);
+
+  useEffect(() => {
+    const { uid } = params;
+    dispatch(chatActions.startConversationAsync({ uid: currentUser.id, cw: uid }));
+    dispatch(chatActions.loadConversations({ uid: currentUser.id }));
+  }, []);
+
+  useEffect(() => {
+    if (currentConversation?._id) {
+      socketRef.current.emit('client-join-room', currentConversation._id);
+      dispatch(chatActions.loadMessageAsync({ conversationId: currentConversation._id }));
+    }
+  }, [currentConversation]);
 
   const handleSendMessage = (message) => {
+    if (message.trim() === '') return;
     const data = {
-      receiver: receiverId,
-      sender: senderId,
-      message: message,
+      sender_id: currentUser.id,
+      body: message.trim(),
+      conversation_id: currentConversation._id,
     };
-    socket.current.emit('send-msg', data);
-    pushMessageToState(data);
+    socketRef.current.emit('client-send-message', data);
+    dispatch(chatActions.addMessage({ conversationId: currentConversation._id, data }));
   };
-  const pushMessageToState = (messageData) => {
-    setMessages((prevList) => [...prevList, messageData]);
-  };
-
-  const handleStartConversation = () => {
-    setIsStart(true);
-  };
-
-  const handleChangeContact = (contactId) => {
-    dispatch(chatActions.setCurrentReceiver(contactId));
+  const handleChangeConversation = (conversation) => {
+    // dispatch(chatActions.clearMessages(currentConversation._id));
+    dispatch(chatActions.setCurrentConversation(conversation));
+    dispatch(chatActions.setCurrentReceiver(conversation));
   };
 
   const conversationHeader =
-    currentRole === ROLE_LISTENER_STRING ? 'Người kể chuyện' : 'Người lắng nghe';
-
-  const isShowChatStartModal = !isStart && currentRole === ROLE_MEMBER_STRING;
-
+    currentRole.slug === ROLE_LISTENER_STRING ? 'Người kể chuyện' : 'Người lắng nghe';
+  // const isShowChatStartModal = !isStart && currentRole.slug === ROLE_MEMBER_STRING;
   return (
     <MuContainer>
       <ChatWrapper sx={{ height: '100%', py: 3, display: 'flex' }}>
         <ConversationSection>
           <ConversationHeader title={conversationHeader} />
-          <ConversationList data={CONVERSATION_EXAMPLE} onChangeContact={handleChangeContact} />
+          {
+            <ConversationList
+              data={conversations}
+              onChangeConversation={handleChangeConversation}
+            />
+          }
         </ConversationSection>
         <ChatContainer>
-          <ChatHeader currentReceiver={currentReceiver} />
-          <ChatListMessage messages={CHAT_SAMPLE} currentId={senderId} />
-          {isShowChatStartModal && <ChatStartModal onStart={handleStartConversation} />}
+          <ChatHeader currentReceiver={currentConversation} />
+          <ChatListMessage messages={messages} currentId={senderId} />
+          {/* {isShowChatStartModal && <ChatStartModal onStart={handleStartConversation} />} */}
           <Stack justifyContent='center' alignItems='center'>
-            {(isStart || currentRole === ROLE_LISTENER_STRING) && (
-              <ChatInput onSendMessage={handleSendMessage} />
-            )}
+            {/* {(isStart || currentRole.slug === ROLE_LISTENER_STRING) && ( */}
+            <ChatInput onSendMessage={handleSendMessage} />
+            {/* )} */}
           </Stack>
         </ChatContainer>
       </ChatWrapper>

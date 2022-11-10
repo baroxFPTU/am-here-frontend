@@ -1,5 +1,6 @@
 import { auth } from 'configs/firebase';
 import { authActions, selectUser } from 'features/auth/authSlice';
+import { chatActions } from 'features/chat/chatSlice';
 import {
   browserSessionPersistence,
   createUserWithEmailAndPassword,
@@ -83,6 +84,7 @@ function useAuth() {
     await signOut(auth);
     const action = authActions.logout();
     dispatch(action);
+    dispatch(chatActions.clearAll());
     navigate('/auth/login');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

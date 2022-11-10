@@ -10,6 +10,10 @@ const ChatListMessage = ({ messages, currentId }) => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  if (!messages) {
+    return <p>Let have a chat</p>;
+  }
+
   return (
     <Box
       sx={{
@@ -23,8 +27,12 @@ const ChatListMessage = ({ messages, currentId }) => {
       }}
     >
       {messages.map((message, index) => (
-        // <ChatMessage key={index} data={message} isSender={Boolean(currentId === message.sender)} />
-        <ChatMessage key={index} data={message} isSender={message.isSender} /> // just for tét
+        <ChatMessage
+          key={index}
+          data={message}
+          isSender={Boolean(currentId === message.sender_id)}
+        />
+        // <ChatMessage key={index} data={message} isSender={message.isSender} /> // just for tét
       ))}
       <div ref={bottomRef} />
     </Box>

@@ -1,28 +1,25 @@
-import { selectCurrentReceiver } from 'features/chat/chatSlice';
+import { selectCurrentConversation, selectCurrentReceiver } from 'features/chat/chatSlice';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import Contact from '../Contact';
 
-const ConversationList = ({ data, onChangeContact }) => {
-  const currentReceiver = useSelector(selectCurrentReceiver);
+const ConversationList = ({ data, onChangeConversation }) => {
+  const currentConversation = useSelector(selectCurrentConversation);
+  const isSelected = (conversationId) => {
+    if (!currentConversation) return false;
 
-  const isSelected = (contactId) => {
-    if (!currentReceiver) return false;
-
-    return Boolean(
-      (typeof currentReceiver === 'string' ? currentReceiver : currentReceiver?._id) === contactId
-    );
+    return Boolean(currentConversation?._id === conversationId);
   };
 
   return (
     <ConversationListWrapper>
-      {data.map((contact) => (
+      {data.map((conversation) => (
         <Contact
-          key={contact._id}
-          data={contact}
-          onChangeSelectContact={onChangeContact}
-          isSelected={isSelected(contact?._id)}
+          key={conversation._id}
+          data={conversation}
+          onChangeSelectContact={() => onChangeConversation(conversation)}
+          isSelected={isSelected(conversation?._id)}
         />
       ))}
     </ConversationListWrapper>
