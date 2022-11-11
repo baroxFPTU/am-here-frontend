@@ -8,12 +8,12 @@ const ListenerCard = ({ data }) => {
 
   return (
     <Card sx={{ overflow: 'unset', position: 'relative', mt: '48px' }}>
-      <Link to={`/chat/${data._id}`}>
+      <Link to={`/chat/${data.uid}`}>
         <CardMedia
           component='img'
           alt='green iguana'
           height='250'
-          image={'https://source.unsplash.com/random'}
+          image={data.photoURL || 'https://source.unsplash.com/random'}
           sx={{
             position: 'absolute',
             top: '-24px',

@@ -1,6 +1,5 @@
-import { Box, Button, TextField } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { useRef } from 'react';
-import { FaRegSmileBeam } from 'react-icons/fa';
 import styled from 'styled-components';
 
 function ChatInput({ onSendMessage }) {
@@ -13,76 +12,70 @@ function ChatInput({ onSendMessage }) {
   };
 
   return (
-    <Container>
-      <Box
-        className='button-container'
-        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-      >
-        <Button className='emoji' sx={{ width: 50, height: 50 }}>
-          <FaRegSmileBeam />
-          {/* {showEmojiPicker && <Picker onEmojiClick={handEmojiClick} />} */}
-        </Button>
-      </Box>
-      <form className='input-container' onSubmit={handleClickSendMessage}>
-        <TextField
-          type='text'
-          variant='outlined'
-          placeholder='Nội dung tin nhắn'
-          size='small'
-          sx={{ width: '100%' }}
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
-          inputRef={messageRef}
-        />
-        <Button
-          variant='contained'
-          onClick={handleClickSendMessage}
-          sx={{
-            boxShadow: 'none',
-            background: '#50a6b1',
-          }}
-        >
+    <ChatInputWrapper>
+      <ChatInputContainer>
+        <form id='message-form' onSubmit={handleClickSendMessage} style={{ flex: 1 }}>
+          <TextFieldMessage
+            type='text'
+            placeholder='Nội dung tin nhắn'
+            size='small'
+            sx={{ width: '100%' }}
+            onSubmit={(e) => {
+              e.preventDefault();
+            }}
+            ref={messageRef}
+          />
+        </form>
+        <Button form='message-form' onClick={handleClickSendMessage} sx={{ color: '#50a6b1' }}>
           Gửi
         </Button>
-      </form>
-    </Container>
+      </ChatInputContainer>
+    </ChatInputWrapper>
   );
 }
 
-const Container = styled.div`
+const ChatInputWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   height: 100%;
   width: 100%;
   box-sizing: border-box;
   background-color: #fff;
-  display: grid;
-  grid-template-columns: 10% 1fr;
+`;
+
+const ChatInputContainer = styled(Box)`
+  display: flex;
   align-items: center;
-  .button-container {
-    display: flex;
-    align-items: center;
-    color: white;
-    gap: 1rem;
-    .emoji {
-      position: relative;
-      svg {
-        font-size: 1.5rem;
-        color: #50a6b1;
-        cursor: pointer;
-      }
-      .emoji-picker-react {
-        position: absolute;
-        top: -350px;
-      }
-    }
+  column-gap: 10px;
+
+  width: 100%;
+  padding: 10px 20px;
+  margin-top: 28px;
+
+  margin-bottom: 16px;
+  border-radius: 12px;
+
+  background-color: #f2f5f7;
+
+  &::-webkit-input-placeholder {
+    color: #a5acb1;
   }
-  .input-container {
-    width: 100%;
-    border-radius: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 2rem;
+
+  @media screen and (max-width: 768px) {
+    margin-left: 20px;
+    margin-right: 20px;
   }
 `;
+
+const TextFieldMessage = styled.input`
+  flex: 1;
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  font-family: inherit;
+`;
+
 export default ChatInput;

@@ -10,11 +10,14 @@ import {
 } from '@mui/material';
 import { NAV_ITEMS } from 'app/constant';
 import React from 'react';
+import { Link } from 'react-router-dom';
+import Button from '../Button';
 import HeaderLoginButton from './HeaderLoginButton';
+import HeaderLogoutButton from './HeaderLogoutButton';
 
 const drawerWidth = 260;
 
-const VerticalNavbar = ({ isOpen, onToggleClick }) => {
+const VerticalNavbar = ({ isOpen, onToggleClick, isAuthenticated, onSignOut }) => {
   const container = document.querySelector('#root');
 
   const drawer = (
@@ -25,13 +28,21 @@ const VerticalNavbar = ({ isOpen, onToggleClick }) => {
         {NAV_ITEMS.map((item) => (
           <ListItem key={item.label} disablePadding>
             <ListItemButton sx={{ textAlign: 'center' }}>
-              <ListItemText primary={item.label} />
+              <Button sx={{ color: '#333' }} component={Link} to={item.href}>
+                {item.label}
+              </Button>
             </ListItemButton>
           </ListItem>
         ))}
-        <ListItem>
-          <HeaderLoginButton inverted />
-        </ListItem>
+        {isAuthenticated ? (
+          <ListItem>
+            <HeaderLogoutButton onClick={onSignOut} />
+          </ListItem>
+        ) : (
+          <ListItem>
+            <HeaderLoginButton inverted />
+          </ListItem>
+        )}
       </List>
     </Box>
   );

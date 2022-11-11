@@ -55,6 +55,7 @@ const chatSlice = createSlice({
     loadConversations: (state) => {},
     startConversationAsync: (state) => {},
     startConversationAsyncSuccess: (state, action) => {
+      console.log({ conversation: action.payload });
       state.currentConversation = action.payload;
     },
     startConversationAsyncFailed: (state, action) => {},
@@ -68,7 +69,6 @@ const chatSlice = createSlice({
 export const chatActions = chatSlice.actions;
 
 export const selectCurrentConversation = (state) => state.chat.currentConversation;
-export const selectCurrentReceiver = (state) => state.chat.currentReceiver;
 export const selectConversations = (state) => state.chat.conversations;
 export const selectMessages = (state) => state.chat.messages;
 export const selectCurrentConversationMessages = createSelector(
@@ -78,4 +78,7 @@ export const selectCurrentConversationMessages = createSelector(
     return messages[currentConversation?._id] || [];
   }
 );
+export const selectCurrentReceiver = createSelector(selectCurrentConversation, (conversation) => {
+  return conversation ? conversation?.participants?.[0] : null;
+});
 export default chatSlice.reducer;

@@ -1,20 +1,23 @@
 import { Avatar, Typography } from '@mui/material';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-const Contact = ({ data, onChangeSelectContact, isSelected }) => {
+const Contact = ({ data, onChangeSelectContact, isSelected, lastMessage }) => {
   return (
-    <div
-      className={`contact ${isSelected && 'selected'}`}
-      onClick={() => onChangeSelectContact(data)}
-    >
-      <Avatar />
-      <div className='contact_user'>
-        <Typography variant='h6' sx={{ fontSize: '16px' }}>
-          {data.nickname || 'User'}
-        </Typography>
-        <p>New message</p>
+    <Link to={`/chat/${data?.uid}`}>
+      <div
+        className={`contact ${isSelected && 'selected'}`}
+        // onClick={() => onChangeSelectContact(data)}
+      >
+        <Avatar src={data?.photoURL} />
+        <div className='contact_user'>
+          <Typography variant='h6' sx={{ fontSize: '16px' }}>
+            {data?.nickname || 'User'}
+          </Typography>
+          {lastMessage && <p>New message</p>}
+        </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

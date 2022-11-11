@@ -10,4 +10,9 @@ export const ConversationSection = styled(Box)`
   background-color: #fafafa;
   border-radius: 10px;
   overflow: hidden;
+
+  @media screen and (max-width: 767px) {
+    width: 100%;
+    border-radius: 0;
+  }
 `;

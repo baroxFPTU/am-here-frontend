@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import Contact from '../Contact';
 
-const ConversationList = ({ data, onChangeConversation }) => {
+const ConversationList = ({ data }) => {
   const currentConversation = useSelector(selectCurrentConversation);
   const isSelected = (conversationId) => {
     if (!currentConversation) return false;
@@ -17,8 +17,7 @@ const ConversationList = ({ data, onChangeConversation }) => {
       {data.map((conversation) => (
         <Contact
           key={conversation._id}
-          data={conversation}
-          onChangeSelectContact={() => onChangeConversation(conversation)}
+          data={conversation.participants[0]}
           isSelected={isSelected(conversation?._id)}
         />
       ))}

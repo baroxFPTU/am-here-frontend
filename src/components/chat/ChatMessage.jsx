@@ -1,11 +1,11 @@
 import React from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { selectCurrentReceiver } from 'features/chat/chatSlice';
+import { selectCurrentConversation, selectCurrentReceiver } from 'features/chat/chatSlice';
 import { selectUser } from 'features/auth/authSlice';
 
 const ChatMessage = ({ data, isSender }) => {
-  const currentReceiver = useSelector(selectCurrentReceiver);
+  const currentConversation = useSelector(selectCurrentConversation);
   const user = useSelector(selectUser);
   return (
     data && (
@@ -25,7 +25,7 @@ const ChatMessage = ({ data, isSender }) => {
               textAlign: isSender ? 'right' : 'left',
             }}
           >
-            {isSender ? user?.nickname : currentReceiver?.nickname || 'User'}
+            {isSender ? user?.nickname : currentConversation.participants[0]?.nickname || 'User'}
           </Typography>
           <Typography
             variant='body'

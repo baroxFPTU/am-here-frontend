@@ -4,8 +4,10 @@ import counterReducer from 'features/counter/counterSlice';
 import authReducer from 'features/auth/authSlice';
 import chatReducer from 'features/chat/chatSlice';
 import rootSaga from './rootSaga';
+import commonReducer from 'features/common/commonSlice';
 
 const rootReducer = combineReducers({
+  common: commonReducer,
   counter: counterReducer,
   auth: authReducer,
   chat: chatReducer,

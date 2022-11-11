@@ -8,12 +8,13 @@ export const ChatWrapper = styled(Box)`
 
   flex: 1;
   overflow: hidden;
-`;
-
-export const ChatContainer = styled(Box)`
-  background-color: #fff;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
   height: 100%;
+  padding: 24px 0;
+
+  @media screen and (max-width: 768px) {
+    position: absolute;
+    inset: 0;
+    z-index: 1101;
+    padding: 0;
+  }
 `;

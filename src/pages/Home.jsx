@@ -7,7 +7,7 @@ import FilterSideBar from 'components/FilterSideBar';
 import ListenerList from 'components/ListenerList';
 import { selectCurrentRole, selectUser } from 'features/auth/authSlice';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -19,9 +19,11 @@ import {
 } from 'app/constant';
 import axios from 'axios';
 import { axiosClient } from 'app/axiosClient';
+import { commonActions } from 'features/common/commonSlice';
 
 const Home = () => {
   const [listeners, setListeners] = useState([]);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const currentRole = useSelector(selectCurrentRole);
   const user = useSelector(selectUser);
@@ -33,6 +35,7 @@ const Home = () => {
 
   useEffect(() => {
     (async () => {
+      dispatch(commonActions.setIsLoading(true));
       if (currentRoleSlug === ROLE_MEMBER_STRING) {
         try {
           const response = await axiosClient.get(`/users?role=${ROLE_LISTENER_STRING}`);
@@ -42,9 +45,10 @@ const Home = () => {
           console.log(error);
         }
       }
+      dispatch(commonActions.setIsLoading(false));
     })();
   }, [currentRoleSlug]);
-  console.log(listeners);
+
   return (
     <div>
       <Banner />

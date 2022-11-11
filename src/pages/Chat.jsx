@@ -24,8 +24,11 @@ import ChatListMessage from 'components/chat/ChatListMessage';
 import ConversationHeader from 'components/chat/conversations/ConversationHeader';
 import ConversationList from 'components/chat/conversations/ConversationList';
 import { ConversationSection } from 'components/chat/conversations/styles';
-import { ChatContainer, ChatWrapper } from 'components/chat/styles';
+import { ChatWrapper } from 'components/chat/styles';
 import moment from 'moment/moment';
+import WelcomeChat from 'features/chat/components/WelcomeChat/component';
+import { useWindowSizeChange } from 'features/common/hooks/useWindowSizeChange';
+import ChatContainer from 'components/container/ChatContainer';
 
 export default function Chat() {
   const params = useParams();
@@ -34,8 +37,15 @@ export default function Chat() {
   const currentUser = useSelector(selectUser);
   const currentRole = useSelector(selectCurrentRole);
   const currentConversation = useSelector(selectCurrentConversation);
+  const currentReceiver = useSelector(selectCurrentReceiver);
   const messages = useSelector(selectCurrentConversationMessages);
   const conversations = useSelector(selectConversations);
+  const { isMobile } = useWindowSizeChange();
+
+  const [isShowChat, setIsShowChat] = useState(() => {
+    return !isMobile;
+  }, [isMobile]);
+
   const senderId = currentUser.id;
 
   useEffect(() => {
@@ -64,16 +74,33 @@ export default function Chat() {
 
   useEffect(() => {
     const { uid } = params;
-    dispatch(chatActions.startConversationAsync({ uid: currentUser.id, cw: uid }));
+    if (uid) {
+      dispatch(chatActions.startConversationAsync({ uid: currentUser.id, cw: uid }));
+    }
     dispatch(chatActions.loadConversations({ uid: currentUser.id }));
+
+    return () => {
+      dispatch(chatActions.setCurrentConversation(null));
+    };
   }, []);
 
   useEffect(() => {
-    if (currentConversation?._id) {
-      socketRef.current.emit('client-join-room', currentConversation._id);
-      dispatch(chatActions.loadMessageAsync({ conversationId: currentConversation._id }));
+    const selectedConversation = conversations.find((conversation) =>
+      conversation.participants.find((participant) => participant.uid === params.uid)
+    );
+
+    if (!selectedConversation) {
+      dispatch(chatActions.setCurrentConversation(null));
+
+      isMobile && setIsShowChat(false);
+      return;
     }
-  }, [currentConversation]);
+
+    socketRef.current.emit('client-join-room', selectedConversation._id);
+    dispatch(chatActions.loadMessageAsync({ conversationId: selectedConversation._id }));
+    dispatch(chatActions.setCurrentConversation(selectedConversation));
+    if (isMobile) setIsShowChat(true);
+  }, [params.uid, conversations]);
 
   const handleSendMessage = (message) => {
     if (message.trim() === '') return;
@@ -85,35 +112,27 @@ export default function Chat() {
     socketRef.current.emit('client-send-message', data);
     dispatch(chatActions.addMessage({ conversationId: data.conversation_id, data }));
   };
-  const handleChangeConversation = (conversation) => {
-    // dispatch(chatActions.clearMessages(currentConversation._id));
-    dispatch(chatActions.setCurrentConversation(conversation));
-    dispatch(chatActions.setCurrentReceiver(conversation));
-  };
 
   const conversationHeader =
     currentRole.slug === ROLE_LISTENER_STRING ? 'Người kể chuyện' : 'Người lắng nghe';
-  // const isShowChatStartModal = !isStart && currentRole.slug === ROLE_MEMBER_STRING;
+
+  const isShowConversationHeaderOnMobile = isShowChat && isMobile;
+
   return (
     <MuContainer>
-      <ChatWrapper sx={{ height: '100%', py: 3, display: 'flex' }}>
-        <ConversationSection>
-          <ConversationHeader title={conversationHeader} />
-          {
-            <ConversationList
-              data={conversations}
-              onChangeConversation={handleChangeConversation}
-            />
-          }
-        </ConversationSection>
-        <ChatContainer>
-          <ChatHeader currentReceiver={currentConversation} />
+      <ChatWrapper>
+        {!isShowConversationHeaderOnMobile && (
+          <ConversationSection>
+            <ConversationHeader title={conversationHeader} />
+            {<ConversationList data={conversations} />}
+          </ConversationSection>
+        )}
+        <ChatContainer isVisible={isShowChat}>
+          <ChatHeader receiver={currentReceiver} />
           <ChatListMessage messages={messages} currentId={senderId} />
           {/* {isShowChatStartModal && <ChatStartModal onStart={handleStartConversation} />} */}
           <Stack justifyContent='center' alignItems='center'>
-            {/* {(isStart || currentRole.slug === ROLE_LISTENER_STRING) && ( */}
-            <ChatInput onSendMessage={handleSendMessage} />
-            {/* )} */}
+            {currentConversation && <ChatInput onSendMessage={handleSendMessage} />}
           </Stack>
         </ChatContainer>
       </ChatWrapper>

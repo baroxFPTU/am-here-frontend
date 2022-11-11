@@ -2,6 +2,7 @@ import { axiosClient } from 'app/axiosClient';
 import { all, call, put, takeLatest } from 'redux-saga/effects';
 import queryString from 'query-string';
 import { chatActions } from './chatSlice';
+import { commonActions } from 'features/common/commonSlice';
 
 function* startConversationAsync(action) {
   const { uid, cw } = action.payload;
@@ -26,10 +27,15 @@ function* loadMessageAsync(action) {
   const query = queryString.stringify({
     id: conversationId,
   });
+  yield put(commonActions.setIsLoading(true));
+
   try {
     const messagesResponse = yield call(axiosClient.get, `/chat?${query}`);
     yield put(chatActions.setMessages({ conversationId, data: messagesResponse.data }));
-  } catch (error) {}
+    yield put(commonActions.setIsLoading(false));
+  } catch (error) {
+    yield put(commonActions.setIsLoading(false));
+  }
 }
 
 function* loadConversations(action) {
@@ -37,10 +43,14 @@ function* loadConversations(action) {
   const query = queryString.stringify({
     uid,
   });
+  yield put(commonActions.setIsLoading(true));
   try {
     const conversationsResponse = yield call(axiosClient.get, `/conversations?${query}`);
     yield put(chatActions.setConversations(conversationsResponse.data));
-  } catch (error) {}
+    yield put(commonActions.setIsLoading(false));
+  } catch (error) {
+    yield put(commonActions.setIsLoading(false));
+  }
 }
 
 export function* chatSaga() {

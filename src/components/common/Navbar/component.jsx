@@ -31,12 +31,17 @@ const Navbar = () => {
   };
 
   return (
-    <Stack direction='row' alignItems='center'>
+    <Stack direction='row' alignItems='center' sx={{ columnGap: '10px' }}>
       <NavbarMenuList listItems={NAV_ITEMS} />
       {!isAuthenticated && <HeaderLoginButton inverted={false} />}
       {isAuthenticated && <AccountTooltip onSignOut={handleSignOut} />}
       <MenuIconButton onClick={handleDrawerToggle} />
-      <VerticalNavbar isOpen={mobileOpen} onToggleClick={handleDrawerToggle} />
+      <VerticalNavbar
+        isOpen={mobileOpen}
+        onToggleClick={handleDrawerToggle}
+        isAuthenticated={isAuthenticated}
+        onSignOut={handleSignOut}
+      />
     </Stack>
   );
 };
