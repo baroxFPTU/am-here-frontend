@@ -25,6 +25,7 @@ import ConversationList from 'components/chat/conversations/ConversationList';
 import { ConversationSection } from 'components/chat/conversations/styles';
 import { ChatWrapper } from 'components/chat/styles';
 import ChatContainer from 'components/container/ChatContainer';
+import { selectIsLoading } from 'features/common/commonSlice';
 import { useWindowSizeChange } from 'features/common/hooks/useWindowSizeChange';
 
 export default function Chat() {
@@ -33,6 +34,7 @@ export default function Chat() {
   const dispatch = useDispatch();
   const currentUser = useSelector(selectUser);
   const currentRole = useSelector(selectCurrentRole);
+  const isLoading = useSelector(selectIsLoading);
   const currentConversation = useSelector(selectCurrentConversation);
   const currentReceiver = useSelector(selectCurrentReceiver);
   const messages = useSelector(selectCurrentConversationMessages);
@@ -72,14 +74,15 @@ export default function Chat() {
   useEffect(() => {
     const { uid } = params;
     if (uid) {
+      console.log('start load conversation');
       dispatch(chatActions.startConversationAsync({ uid: currentUser.id, cw: uid }));
     }
-    dispatch(chatActions.loadConversations({ uid: currentUser.id }));
 
+    dispatch(chatActions.loadConversations({ uid: currentUser.id }));
     return () => {
       dispatch(chatActions.setCurrentConversation(null));
     };
-  }, []);
+  }, [params.uid]);
 
   useEffect(() => {
     const selectedConversation = conversations.find((conversation) =>
@@ -87,17 +90,19 @@ export default function Chat() {
     );
 
     if (!selectedConversation && !currentConversation) {
-      dispatch(chatActions.setCurrentConversation(null));
       isMobile && setIsShowChat(false);
       return;
     }
-
-    socketRef.current.emit('client-join-room', selectedConversation?._id);
-    dispatch(chatActions.loadMessageAsync({ conversationId: selectedConversation?._id }));
     dispatch(chatActions.setCurrentConversation(selectedConversation));
-
     if (isMobile) setIsShowChat(true);
-  }, [params.uid, currentConversation]);
+  }, [params.uid]);
+
+  useEffect(() => {
+    socketRef.current.emit('client-join-room', currentConversation?._id);
+    dispatch(chatActions.loadMessageAsync({ conversationId: currentConversation?._id }));
+    dispatch(chatActions.setCurrentConversation(currentConversation));
+    dispatch(chatActions.loadConversations({ uid: currentUser.id }));
+  }, [currentConversation]);
 
   const handleSendMessage = (message) => {
     if (message.trim() === '') return;
@@ -128,7 +133,6 @@ export default function Chat() {
         <ChatContainer isVisible={isShowChat}>
           <ChatHeader receiver={currentReceiver} />
           <ChatListMessage messages={messages} currentId={senderId} />
-          {/* {isShowChatStartModal && <ChatStartModal onStart={handleStartConversation} />} */}
           <Stack justifyContent='center' alignItems='center'>
             {currentConversation && <ChatInput onSendMessage={handleSendMessage} />}
           </Stack>

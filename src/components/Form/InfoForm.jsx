@@ -49,7 +49,7 @@ const InfoForm = ({ defaultValues, handleNext }) => {
           control={control}
           render={({ field }) => (
             <TextField
-              label='Biệu hiệu'
+              label='Biệt hiệu'
               {...field}
               error={errors['nickname']}
               helperText={errors['nickname']?.message}

@@ -55,7 +55,6 @@ const chatSlice = createSlice({
     loadConversations: (state) => {},
     startConversationAsync: (state) => {},
     startConversationAsyncSuccess: (state, action) => {
-      console.log({ conversation: action.payload });
       state.currentConversation = action.payload;
     },
     startConversationAsyncFailed: (state, action) => {},
