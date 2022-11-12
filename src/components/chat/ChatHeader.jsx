@@ -31,6 +31,13 @@ const StyledChatHeader = styled.div`
     font-size: 16px;
     font-weight: 600;
   }
+
+  @media screen and (max-width: 768px) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
 `;
 
 export default ChatHeader;

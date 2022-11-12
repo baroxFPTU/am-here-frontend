@@ -22,8 +22,9 @@ const ChatListMessage = ({ messages, currentId }) => {
       sx={{
         flexGrow: 1,
         overflow: 'auto',
-        px: 4,
-        pt: 2,
+        px: [2, 4],
+        pt: '60px',
+        mb: ['84px', 0],
         background: ['#fff', '#fafafa'],
         maxHeight: '100%',
         overflowY: 'auto',
@@ -34,8 +35,8 @@ const ChatListMessage = ({ messages, currentId }) => {
       {messages.map((message, index) => (
         <ChatMessage
           key={index}
-          data={message}
-          isSender={Boolean(currentUser.id === message.sender_id)}
+          message={message}
+          isOwn={Boolean(currentUser.id === message.sender_id)}
         />
         // <ChatMessage key={index} data={message} isSender={message.isSender} /> // just for tét
       ))}

@@ -39,10 +39,16 @@ const ChatInputWrapper = styled.div`
   justify-content: center;
   align-items: center;
 
-  height: 100%;
   width: 100%;
   box-sizing: border-box;
   background-color: #fff;
+
+  @media screen and (max-width: 768px) {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
 `;
 
 const ChatInputContainer = styled(Box)`

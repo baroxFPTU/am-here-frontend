@@ -3,15 +3,33 @@ import { selectUser } from 'features/auth/authSlice';
 import { selectCurrentConversation } from 'features/chat/chatSlice';
 import { useSelector } from 'react-redux';
 
-const ChatMessage = ({ data, isSender }) => {
+const ChatMessage = ({ message, isOwn }) => {
   const currentConversation = useSelector(selectCurrentConversation);
   const user = useSelector(selectUser);
+  const placement = isOwn ? 'right' : 'left';
+  const placements = {
+    right: {
+      justify_content: 'flex-end',
+      text_align: 'right',
+      nickname: user?.nickname,
+      msg_color: '#fff',
+      msg_bg: '#1ea9b3',
+    },
+    left: {
+      justifyContent: 'flex-start',
+      text_align: 'left',
+      nickname: currentConversation.participants[0]?.nickname,
+      msg_color: '#333',
+      msg_bg: '#ddd',
+    },
+  };
+
   return (
-    data && (
+    message && (
       <Stack
         direction='row'
         alignItems='center'
-        justifyContent={isSender ? 'flex-end' : 'flex-start'}
+        justifyContent={placements[placement].justify_content}
         sx={{ mb: 2 }}
       >
         <Box>
@@ -21,23 +39,21 @@ const ChatMessage = ({ data, isSender }) => {
               fontSize: '15px',
               display: 'block',
               mb: 1,
-              textAlign: isSender ? 'right' : 'left',
+              textAlign: placements[placement].text_align,
             }}
-          >
-            {isSender ? user?.nickname : currentConversation.participants[0]?.nickname || 'User'}
-          </Typography>
+          ></Typography>
           <Typography
             variant='body'
             as='div'
             sx={{
               padding: '10px 20px',
-              color: isSender ? '#fff' : '#333',
-              background: isSender ? '#1ea9b3' : '#ddd',
+              color: placements[placement].msg_color,
+              background: placements[placement].msg_bg,
               borderRadius: 2,
               fontSize: ['14px', '16px'],
             }}
           >
-            {data.body}
+            {message.body}
           </Typography>
         </Box>
       </Stack>
