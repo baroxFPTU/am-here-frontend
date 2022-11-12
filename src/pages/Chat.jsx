@@ -2,11 +2,11 @@
 import { Container as MuContainer, Stack } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import socketIOClient from 'socket.io-client';
 
 import { baseURL } from 'app/axiosClient';
-import { ROLE_LISTENER_STRING, ROLE_MEMBER_STRING } from 'app/constant';
+import { ROLE_LISTENER_STRING } from 'app/constant';
 
 import { selectCurrentRole, selectUser } from 'features/auth/authSlice';
 import {
@@ -15,7 +15,6 @@ import {
   selectCurrentConversation,
   selectCurrentConversationMessages,
   selectCurrentReceiver,
-  selectMessages,
 } from 'features/chat/chatSlice';
 
 import ChatHeader from 'components/chat/ChatHeader';
@@ -25,10 +24,8 @@ import ConversationHeader from 'components/chat/conversations/ConversationHeader
 import ConversationList from 'components/chat/conversations/ConversationList';
 import { ConversationSection } from 'components/chat/conversations/styles';
 import { ChatWrapper } from 'components/chat/styles';
-import moment from 'moment/moment';
-import WelcomeChat from 'features/chat/components/WelcomeChat/component';
-import { useWindowSizeChange } from 'features/common/hooks/useWindowSizeChange';
 import ChatContainer from 'components/container/ChatContainer';
+import { useWindowSizeChange } from 'features/common/hooks/useWindowSizeChange';
 
 export default function Chat() {
   const params = useParams();
@@ -41,6 +38,7 @@ export default function Chat() {
   const messages = useSelector(selectCurrentConversationMessages);
   const conversations = useSelector(selectConversations);
   const { isMobile } = useWindowSizeChange();
+  const navigate = useNavigate();
 
   const [isShowChat, setIsShowChat] = useState(() => {
     return !isMobile;
@@ -59,7 +57,6 @@ export default function Chat() {
     });
 
     socketRef.current.on('server-exchange-message', (data) => {
-      console.log({ data, currentUser, currentConversation });
       if (data.sender_id !== currentUser.id) {
         dispatch(chatActions.addMessage({ conversationId: data.conversation_id, data }));
       }
@@ -86,26 +83,25 @@ export default function Chat() {
 
   useEffect(() => {
     const selectedConversation = conversations.find((conversation) =>
-      conversation.participants.find((participant) => participant.uid === params.uid)
+      conversation.participants.find((participant) => participant?.uid === params?.uid)
     );
 
-    if (!selectedConversation) {
+    if (!selectedConversation && !currentConversation) {
       dispatch(chatActions.setCurrentConversation(null));
       isMobile && setIsShowChat(false);
-      if (params.uid) {
-        dispatch(chatActions.loadConversations({ uid: currentUser.id }));
-      }
       return;
     }
 
-    socketRef.current.emit('client-join-room', selectedConversation._id);
-    dispatch(chatActions.loadMessageAsync({ conversationId: selectedConversation._id }));
+    socketRef.current.emit('client-join-room', selectedConversation?._id);
+    dispatch(chatActions.loadMessageAsync({ conversationId: selectedConversation?._id }));
     dispatch(chatActions.setCurrentConversation(selectedConversation));
+
     if (isMobile) setIsShowChat(true);
-  }, [params.uid, conversations]);
+  }, [params.uid, currentConversation]);
 
   const handleSendMessage = (message) => {
     if (message.trim() === '') return;
+
     const data = {
       sender_id: currentUser.id,
       body: message.trim(),

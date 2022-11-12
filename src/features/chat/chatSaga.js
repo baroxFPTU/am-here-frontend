@@ -45,7 +45,7 @@ function* loadConversations(action) {
   });
   yield put(commonActions.setIsLoading(true));
   try {
-    const conversationsResponse = yield call(axiosClient.get, `/conversations?${query}`);
+    const conversationsResponse = yield call(axiosClient.get, `/conversations/all?${query}`);
     yield put(chatActions.setConversations(conversationsResponse.data));
     yield put(commonActions.setIsLoading(false));
   } catch (error) {
