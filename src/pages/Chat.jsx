@@ -43,8 +43,8 @@ export default function Chat() {
   const navigate = useNavigate();
 
   const [isShowChat, setIsShowChat] = useState(() => {
-    return !isMobile;
-  }, [isMobile]);
+    return isMobile && currentConversation;
+  });
 
   const senderId = currentUser.id;
 
@@ -71,37 +71,52 @@ export default function Chat() {
     };
   }, []);
 
+  /**
+   * Load all conversations on first load.
+   */
   useEffect(() => {
-    const { uid } = params;
-    if (uid) {
-      console.log('start load conversation');
-      dispatch(chatActions.startConversationAsync({ uid: currentUser.id, cw: uid }));
-    }
-
     dispatch(chatActions.loadConversations({ uid: currentUser.id }));
+
     return () => {
+      console.log('no more in chat so hide chat message');
+      setIsShowChat(false);
       dispatch(chatActions.setCurrentConversation(null));
     };
-  }, [params.uid]);
+  }, []);
 
+  /**
+   * Check whether have selected conversation or not.
+   * If selected conversation not have in list => create new one.
+   */
   useEffect(() => {
     const selectedConversation = conversations.find((conversation) =>
       conversation.participants.find((participant) => participant?.uid === params?.uid)
     );
 
-    if (!selectedConversation && !currentConversation) {
-      isMobile && setIsShowChat(false);
+    if (!selectedConversation) {
+      if (params.uid) {
+        console.log('start load conversation');
+        dispatch(chatActions.startConversationAsync({ uid: currentUser.id, cw: params.uid }));
+      }
+      if (isMobile) {
+        console.log('on mobile and not have conversation chat message. Hide chat');
+        setIsShowChat(false);
+      }
+      dispatch(chatActions.setCurrentConversation(null));
       return;
     }
     dispatch(chatActions.setCurrentConversation(selectedConversation));
-    if (isMobile) setIsShowChat(true);
+    // if (isMobile) setIsShowChat(true);
   }, [params.uid]);
 
   useEffect(() => {
+    if (!currentConversation) return;
     socketRef.current.emit('client-join-room', currentConversation?._id);
     dispatch(chatActions.loadMessageAsync({ conversationId: currentConversation?._id }));
-    dispatch(chatActions.setCurrentConversation(currentConversation));
-    dispatch(chatActions.loadConversations({ uid: currentUser.id }));
+    if (currentConversation) {
+      console.log('has conversation so show chat message');
+      setIsShowChat(true);
+    }
   }, [currentConversation]);
 
   const handleSendMessage = (message) => {
@@ -120,7 +135,7 @@ export default function Chat() {
     currentRole.slug === ROLE_LISTENER_STRING ? 'Người kể chuyện' : 'Người lắng nghe';
 
   const isShowConversationHeaderOnMobile = isShowChat && isMobile;
-
+  console.log({ isShowChat, isMobile });
   return (
     <MuContainer>
       <ChatWrapper>

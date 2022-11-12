@@ -17,6 +17,7 @@ function* startConversationAsync(action) {
   try {
     const conversationResponse = yield call(axiosClient.get, `/conversations?${query}`);
     yield put(chatActions.startConversationAsyncSuccess(conversationResponse.data));
+    yield put(chatActions.loadConversations({ uid }));
   } catch (error) {
     yield put(chatActions.startConversationAsyncFailed());
   }
