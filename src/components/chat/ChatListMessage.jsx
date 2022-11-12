@@ -23,10 +23,11 @@ const ChatListMessage = ({ messages, currentId }) => {
         flexGrow: 1,
         overflow: 'auto',
         px: 4,
-        py: 2,
+        pt: 2,
         background: ['#fff', '#fafafa'],
         maxHeight: '100%',
         overflowY: 'auto',
+        width: '100%',
       }}
     >
       {hasNoMessage && <WelcomeChat isTeller={currentUser.role_data.slug === ROLE_MEMBER_STRING} />}
@@ -34,7 +35,7 @@ const ChatListMessage = ({ messages, currentId }) => {
         <ChatMessage
           key={index}
           data={message}
-          isSender={Boolean(currentId === message.sender_id)}
+          isSender={Boolean(currentUser.id === message.sender_id)}
         />
         // <ChatMessage key={index} data={message} isSender={message.isSender} /> // just for tét
       ))}

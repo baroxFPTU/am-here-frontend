@@ -1,8 +1,7 @@
-import React from 'react';
 import { Box, Stack, Typography } from '@mui/material';
-import { useSelector } from 'react-redux';
-import { selectCurrentConversation, selectCurrentReceiver } from 'features/chat/chatSlice';
 import { selectUser } from 'features/auth/authSlice';
+import { selectCurrentConversation } from 'features/chat/chatSlice';
+import { useSelector } from 'react-redux';
 
 const ChatMessage = ({ data, isSender }) => {
   const currentConversation = useSelector(selectCurrentConversation);
@@ -13,7 +12,7 @@ const ChatMessage = ({ data, isSender }) => {
         direction='row'
         alignItems='center'
         justifyContent={isSender ? 'end' : 'start'}
-        sx={{ my: 2 }}
+        sx={{ mb: 2 }}
       >
         <Box>
           <Typography
@@ -31,10 +30,11 @@ const ChatMessage = ({ data, isSender }) => {
             variant='body'
             as='div'
             sx={{
-              padding: '12px 24px',
+              padding: '10px 20px',
               color: isSender ? '#fff' : '#333',
               background: isSender ? '#1ea9b3' : '#ddd',
               borderRadius: 2,
+              fontSize: ['14px', '16px'],
             }}
           >
             {data.body}

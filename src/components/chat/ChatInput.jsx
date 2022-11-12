@@ -52,7 +52,7 @@ const ChatInputContainer = styled(Box)`
 
   width: 100%;
   padding: 10px 20px;
-  margin-top: 28px;
+  margin-top: 10px;
 
   margin-bottom: 16px;
   border-radius: 12px;
