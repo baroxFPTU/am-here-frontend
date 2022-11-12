@@ -60,7 +60,6 @@ const SignUpForm = () => {
   React.useEffect(() => {
     (async () => {
       const response = await axiosClient.get('/roles');
-      console.log(response.data);
       setRoles(response.data);
     })();
   }, []);

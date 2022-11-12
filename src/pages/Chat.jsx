@@ -91,8 +91,9 @@ export default function Chat() {
 
     if (!selectedConversation) {
       dispatch(chatActions.setCurrentConversation(null));
-
       isMobile && setIsShowChat(false);
+      dispatch(chatActions.loadConversations({ uid: currentUser.id }));
+
       return;
     }
 
