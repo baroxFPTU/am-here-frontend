@@ -11,7 +11,7 @@ const ChatMessage = ({ data, isSender }) => {
       <Stack
         direction='row'
         alignItems='center'
-        justifyContent={isSender ? 'end' : 'start'}
+        justifyContent={isSender ? 'flex-end' : 'flex-start'}
         sx={{ mb: 2 }}
       >
         <Box>
