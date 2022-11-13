@@ -17,7 +17,7 @@ const ListenerList = ({ listeners, haveListeners }) => {
 
   return haveListeners ? (
     <>
-      <Grid container spacing={4}>
+      <Grid container spacing={4} alignItems='stretch'>
         {listeners.map((listener, index) => (
           <Grid item xs={12} md={6} lg={4} key={index}>
             <ListenerCard data={listener} />

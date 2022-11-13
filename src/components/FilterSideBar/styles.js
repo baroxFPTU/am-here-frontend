@@ -11,6 +11,7 @@ export const FilterSidebarBoxStyle = {
   p: 5,
   borderRadius: '10px',
   minHeight: '500px',
+  display: ['none', 'none', 'block'],
 };
 
 export const FilterSidebarLabelStyle = {
