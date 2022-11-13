@@ -43,6 +43,7 @@ export default function Chat() {
   const navigate = useNavigate();
 
   const [isShowChat, setIsShowChat] = useState(() => {
+    if (!isMobile) return true;
     return isMobile && currentConversation;
   });
 
@@ -106,8 +107,7 @@ export default function Chat() {
       return;
     }
     dispatch(chatActions.setCurrentConversation(selectedConversation));
-    // if (isMobile) setIsShowChat(true);
-  }, [params.uid]);
+  }, [params.uid, conversations]);
 
   useEffect(() => {
     if (!currentConversation) return;
@@ -135,7 +135,7 @@ export default function Chat() {
     currentRole.slug === ROLE_LISTENER_STRING ? 'Người kể chuyện' : 'Người lắng nghe';
 
   const isShowConversationHeaderOnMobile = isShowChat && isMobile;
-  console.log({ isShowChat, isMobile });
+
   return (
     <MuContainer>
       <ChatWrapper>

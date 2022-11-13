@@ -1,8 +1,10 @@
+import React, { createContext } from 'react';
 import { Box } from '@mui/material';
-import Footer from 'components/common/Footer';
-import React from 'react';
 import { Outlet } from 'react-router-dom';
+
 import Header from '../common/Header/component';
+
+export const ChatContext = createContext();
 
 const ChatLayout = ({ children }) => {
   return (
