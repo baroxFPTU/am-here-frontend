@@ -53,6 +53,13 @@ code {
   height: 100vh;
   display: flex;
   flex-direction: column;
+  color: #333;
+}
+
+h1,
+h2,
+h3 {
+  color: #147880;
 }
 
 a {

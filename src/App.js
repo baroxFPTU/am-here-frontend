@@ -3,6 +3,7 @@ import AuthLayout from 'components/layout/AuthLayout';
 import ChatLayout from 'components/layout/ChatLayout';
 import AuthRoute from 'components/routes/AuthRoute';
 import PrivateRoute from 'components/routes/PrivateRoute';
+import AboutUs from 'pages/AboutUs';
 import Chat from 'pages/Chat';
 import ListenerDetail from 'pages/ListenerDetail';
 import Login from 'pages/Login';
@@ -19,6 +20,7 @@ function App() {
         <Routes>
           <Route path='/' element={<MainLayout />}>
             <Route path='' element={<Home />} />
+            <Route path='/about-us' element={<AboutUs />} />
             <Route path='/listeners/:id' element={<ListenerDetail />} />
           </Route>
           <Route element={<PrivateRoute redirectPath={APP_ROUTES.login} />}>

@@ -36,7 +36,7 @@ const Home = () => {
   useEffect(() => {
     (async () => {
       dispatch(commonActions.setIsLoading(true));
-      if (currentRoleSlug === ROLE_MEMBER_STRING) {
+      if (currentRoleSlug === ROLE_MEMBER_STRING && !haveListeners) {
         try {
           const response = await axiosClient.get(`/users?role=${ROLE_LISTENER_STRING}`);
 
@@ -47,7 +47,7 @@ const Home = () => {
       }
       dispatch(commonActions.setIsLoading(false));
     })();
-  }, [currentRoleSlug]);
+  }, [currentRoleSlug, dispatch]);
 
   return (
     <div>
