@@ -1,12 +1,15 @@
 import { APP_ROUTES } from 'app/constant';
 import AuthLayout from 'components/layout/AuthLayout';
 import ChatLayout from 'components/layout/ChatLayout';
+import SettingLayout from 'components/layout/SettingLayout';
 import AuthRoute from 'components/routes/AuthRoute';
 import PrivateRoute from 'components/routes/PrivateRoute';
 import AboutUs from 'pages/AboutUs';
 import Chat from 'pages/Chat';
 import ListenerDetail from 'pages/ListenerDetail';
 import Login from 'pages/Login';
+import ProfilePage from 'pages/ProfilePage';
+import SettingsPage from 'pages/SettingsPage';
 import SignUp from 'pages/SignUp';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import MainLayout from './components/layout/MainLayout';
@@ -24,6 +27,12 @@ function App() {
             <Route path='/listeners/:id' element={<ListenerDetail />} />
           </Route>
           <Route element={<PrivateRoute redirectPath={APP_ROUTES.login} />}>
+            <Route element={<MainLayout />}>
+              <Route path='/profiles/:uid' element={<ProfilePage />} />
+            </Route>
+            <Route element={<SettingLayout />}>
+              <Route path='/settings' element={<SettingsPage />} />
+            </Route>
             <Route path='/chat' element={<ChatLayout />}>
               <Route path='' element={<Chat />} />
               <Route path=':uid' element={<Chat />} />

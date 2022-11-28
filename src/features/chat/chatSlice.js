@@ -60,7 +60,11 @@ const chatSlice = createSlice({
     startConversationAsyncFailed: (state, action) => {},
     loadMessageAsync: (state) => {},
     clearAll: (state) => {
-      state = initialState;
+      state.conversations = [];
+      state.currentConversation = null;
+      state.currentReceiver = null;
+      state.isLoading = false;
+      state.messages = [];
     },
   },
 });

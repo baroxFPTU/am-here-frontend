@@ -7,6 +7,7 @@ import { RiGitRepositoryPrivateLine } from 'react-icons/ri';
 
 export const ROLE_MEMBER_STRING = 'nguoi-ke-chuyen';
 export const ROLE_LISTENER_STRING = 'nguoi-lang-nghe';
+export const ROLE_LOCAL_STORAGE_LABEL = 'roles';
 export const REACT_APP_API_URL = 'http://localhost:4000/api';
 
 export const APP_ROUTES = {

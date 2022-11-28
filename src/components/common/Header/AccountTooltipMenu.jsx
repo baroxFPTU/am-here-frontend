@@ -5,8 +5,13 @@ import Divider from '@mui/material/Divider';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { Link } from 'react-router-dom';
+import { selectUser } from 'features/auth/authSlice';
+import { useSelector } from 'react-redux';
 
 const AccountTooltipMenu = ({ anchorEl, isOpen, onClick, onClose, onLogout }) => {
+  const currentUser = useSelector(selectUser);
+
   return (
     <Menu
       anchorEl={anchorEl}
@@ -42,9 +47,11 @@ const AccountTooltipMenu = ({ anchorEl, isOpen, onClick, onClose, onLogout }) =>
       transformOrigin={{ horizontal: 'right', vertical: 'top' }}
       anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
     >
-      <MenuItem>Tài khoản của tôi</MenuItem>
+      <MenuItem component={Link} to={`/profiles/${currentUser.id}`}>
+        Tài khoản của tôi
+      </MenuItem>
       <Divider />
-      <MenuItem>
+      <MenuItem component={Link} to={`/settings`}>
         <ListItemIcon>
           <Settings fontSize='small' />
         </ListItemIcon>

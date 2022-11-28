@@ -83,8 +83,8 @@ function useAuth() {
   const signOutAll = useCallback(async () => {
     await signOut(auth);
     const action = authActions.logout();
-    dispatch(action);
     dispatch(chatActions.clearAll());
+    dispatch(action);
     navigate('/auth/login');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

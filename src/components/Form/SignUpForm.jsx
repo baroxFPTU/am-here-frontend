@@ -1,25 +1,23 @@
-import * as React from 'react';
-import axios from 'axios';
-import Box from '@mui/material/Box';
-import Step from '@mui/material/Step';
 import { Stack } from '@mui/material';
-import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Stepper from '@mui/material/Stepper';
-import StepLabel from '@mui/material/StepLabel';
-import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import Step from '@mui/material/Step';
 import StepContent from '@mui/material/StepContent';
+import StepLabel from '@mui/material/StepLabel';
+import Stepper from '@mui/material/Stepper';
+import Typography from '@mui/material/Typography';
+import * as React from 'react';
 
-import { REACT_APP_API_URL, ROLE_LISTENER_STRING, ROLE_MEMBER_STRING } from 'app/constant';
+import { roleApi } from 'api/roleApi';
+import { ROLE_LOCAL_STORAGE_LABEL, ROLE_MEMBER_STRING } from 'app/constant';
 import SelectCategory from 'components/SelectField/SelectCategory';
-import useAuth from 'features/auth/hooks/useAuth';
-import InfoForm from './InfoForm';
-import { useNavigate } from 'react-router-dom';
-import { getAuth, updateProfile } from 'firebase/auth';
-import { useDispatch } from 'react-redux';
 import { authActions } from 'features/auth/authSlice';
-import { axiosClient } from 'app/axiosClient';
+import useAuth from 'features/auth/hooks/useAuth';
 import moment from 'moment';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import InfoForm from './InfoForm';
 
 const steps = [
   {
@@ -59,8 +57,9 @@ const SignUpForm = () => {
 
   React.useEffect(() => {
     (async () => {
-      const response = await axiosClient.get('/roles');
+      const response = await roleApi.findAll();
       setRoles(response.data);
+      localStorage.setItem(ROLE_LOCAL_STORAGE_LABEL, JSON.stringify(response.data));
     })();
   }, []);
 
