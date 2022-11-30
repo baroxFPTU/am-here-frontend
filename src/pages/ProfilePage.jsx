@@ -28,6 +28,7 @@ const defaultTabPanels = [
 const ProfilePage = () => {
   const params = useParams();
   const [user, setUser] = useState(null);
+  const [defaultValues, setDefaultValues] = useState(null);
   const [tabIndex, setTabIndex] = useState(0);
   const [isEditMode, setIsEditMode] = useState(false);
 
@@ -37,7 +38,18 @@ const ProfilePage = () => {
       userApi
         .getById(userId)
         .then((res) => {
-          setUser(res.data);
+          const user = res.data;
+          setUser(user);
+          setDefaultValues({
+            nickname: user?.nickname,
+            bio: user?.bio,
+            email: user?.email,
+            phone: user?.phone,
+            birthday: user?.birthday,
+            role_data: {
+              slug: user?.role_data?.slug,
+            },
+          });
         })
         .catch((error) => {
           console.log(error);
@@ -53,7 +65,18 @@ const ProfilePage = () => {
     setIsEditMode(!isEditMode);
   };
 
-  const editButtonLabel = isEditMode ? 'Hoàn tất chỉnh sửa' : 'Chỉnh sửa';
+  const handleSubmitProfileForm = async (formValues) => {
+    try {
+      const updatedUser = await userApi.updateById(user.uid, formValues);
+      setUser(updatedUser.data);
+      setIsEditMode(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const editButtonLabel = 'Chỉnh sửa';
+  console.log({ user });
 
   return (
     <Container sx={{ py: 9 }}>
@@ -61,12 +84,25 @@ const ProfilePage = () => {
       <StyledTabs tabs={defaultTabs} currentIndex={tabIndex} onChange={handleChangeIndex} />
       <Box sx={{ maxWidth: 600, margin: '0 auto' }}>
         <TabPanel currentIndex={tabIndex} index={0}>
-          <Box sx={{ py: 2 }}>
-            <Button variant='outlined' onClick={handleChangeFormMode}>
-              {editButtonLabel}
+          {!isEditMode && (
+            <Box sx={{ py: 2 }}>
+              <Button variant='outlined' onClick={handleChangeFormMode} form='profile-form'>
+                {editButtonLabel}
+              </Button>
+            </Box>
+          )}
+          {user && (
+            <ProfileForm
+              defaultValues={defaultValues}
+              isEditing={!isEditMode}
+              onSubmit={handleSubmitProfileForm}
+            />
+          )}
+          {isEditMode && (
+            <Button variant='contained' form='profile-form' type='submit'>
+              Hoàn tất
             </Button>
-          </Box>
-          <ProfileForm defaultValues={user} isEditing={!isEditMode} />
+          )}
         </TabPanel>
       </Box>
     </Container>

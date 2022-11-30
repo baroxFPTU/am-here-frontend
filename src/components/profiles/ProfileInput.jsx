@@ -15,10 +15,23 @@ const StyledInputBase = styled(InputBase)`
     border: none;
     border-radius: unset;
   }
+  & .MuiInputBase-input.Mui-disabled:-internal-autofill-selected {
+    appearance: none;
+    background-color: #fff !important;
+    color: #333 !important;
+  }
 `;
 
-const ProfileInput = ({ ...props }) => {
-  return <StyledInputBase {...props} />;
-};
+const ProfileInput = React.forwardRef((props, ref) => {
+  const { disabled } = props;
+  return (
+    <StyledInputBase
+      {...props}
+      inputRef={ref}
+      placeholder={disabled ? 'Chưa cập nhât' : ''}
+      autoComplete='nope'
+    />
+  );
+});
 
 export default ProfileInput;

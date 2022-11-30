@@ -1,19 +1,8 @@
-import {
-  FormControlLabel,
-  InputBase,
-  InputLabel,
-  Radio,
-  RadioGroup,
-  Stack,
-  TextareaAutosize,
-  ToggleButton,
-  ToggleButtonGroup,
-  Typography,
-} from '@mui/material';
+import { TextareaAutosize, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { roleApi } from 'api/roleApi';
 import { ROLE_LOCAL_STORAGE_LABEL } from 'app/constant';
-import React, { useEffect, useState } from 'react';
-import { memo } from 'react';
+import { memo, useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import ProfileInput from '../ProfileInput';
 import ProfileFormGroup from './ProfileFormGroup';
 
@@ -27,9 +16,11 @@ const initialValues = {
 
 const UNKNOWN_VALUE = 'Chưa cập nhật';
 
-const ProfileForm = ({ defaultValues = initialValues, isEditing }) => {
-  const [selectedRoleSlug, setSelectedRoleSlug] = useState(defaultValues?.role_data?.slug || null);
+const ProfileForm = ({ defaultValues = initialValues, isEditing, onSubmit }) => {
   const [roles, setRoles] = useState([]);
+  const { register, control, handleSubmit } = useForm({
+    defaultValues: defaultValues,
+  });
 
   useEffect(() => {
     const rolesLocal = JSON.parse(localStorage.getItem(ROLE_LOCAL_STORAGE_LABEL));
@@ -46,45 +37,44 @@ const ProfileForm = ({ defaultValues = initialValues, isEditing }) => {
   }, [defaultValues]);
 
   if (!defaultValues) return;
-  const { nickname, email, phone, birthday, role_data } = defaultValues;
-
-  const handleChangeRole = (e, roleDataSlug) => {
-    setSelectedRoleSlug(roleDataSlug);
-  };
 
   return (
-    <div>
+    <form onSubmit={handleSubmit(onSubmit)} id='profile-form' autoComplete='off'>
       <ProfileFormGroup label='Biệt hiệu'>
-        <ProfileInput value={nickname} disabled={isEditing} />
+        <ProfileInput disabled={isEditing} {...register('nickname')} />
       </ProfileFormGroup>
       <ProfileFormGroup label='Tiểu sử'>
-        <TextareaAutosize disabled={isEditing} value={email} />
+        <TextareaAutosize
+          disabled={isEditing}
+          {...register('bio')}
+          placeholder={isEditing ? UNKNOWN_VALUE : ''}
+        />
       </ProfileFormGroup>
       <ProfileFormGroup label='Email'>
-        <ProfileInput disabled={isEditing} value={email} />
+        <ProfileInput disabled={isEditing} {...register('email')} />
       </ProfileFormGroup>
       <ProfileFormGroup label='Số điện thoại'>
-        <ProfileInput disabled={isEditing} value={phone || UNKNOWN_VALUE} />
+        <ProfileInput disabled={isEditing} {...register('phone')} />
       </ProfileFormGroup>
       <ProfileFormGroup label='Ngày sinh'>
-        <ProfileInput disabled={isEditing} value={birthday || UNKNOWN_VALUE} />
+        <ProfileInput disabled={isEditing} {...register('birthday')} />
       </ProfileFormGroup>
       <ProfileFormGroup label='Vai trò'>
-        <ToggleButtonGroup
-          color='primary'
-          value={selectedRoleSlug}
-          onChange={handleChangeRole}
-          exclusive
-          aria-label='Vai trò'
-        >
-          {roles.map((role) => (
-            <ToggleButton key={role._id} value={role.slug}>
-              {role.name}
-            </ToggleButton>
-          ))}
-        </ToggleButtonGroup>
+        <Controller
+          name='role_data.slug'
+          control={control}
+          render={({ field }) => (
+            <ToggleButtonGroup color='primary' exclusive aria-label='Vai trò' {...field}>
+              {roles.map((role) => (
+                <ToggleButton key={role._id} value={role.slug}>
+                  {role.name}
+                </ToggleButton>
+              ))}
+            </ToggleButtonGroup>
+          )}
+        />
       </ProfileFormGroup>
-    </div>
+    </form>
   );
 };
 

@@ -3,7 +3,6 @@ import React, { memo } from 'react';
 import styled from 'styled-components';
 
 const InfoSection = ({ user }) => {
-  console.log({ user });
   return (
     <InfoSectionStyled component='section'>
       <Avatar src={user.photoURL || 'null'} alt={user?.nickname} sx={{ width: 150, height: 150 }} />

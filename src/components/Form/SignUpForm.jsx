@@ -1,23 +1,22 @@
-import { Stack } from '@mui/material';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Paper from '@mui/material/Paper';
-import Step from '@mui/material/Step';
-import StepContent from '@mui/material/StepContent';
-import StepLabel from '@mui/material/StepLabel';
-import Stepper from '@mui/material/Stepper';
-import Typography from '@mui/material/Typography';
-import * as React from 'react';
-
-import { roleApi } from 'api/roleApi';
-import { ROLE_LOCAL_STORAGE_LABEL, ROLE_MEMBER_STRING } from 'app/constant';
-import SelectCategory from 'components/SelectField/SelectCategory';
-import { authActions } from 'features/auth/authSlice';
-import useAuth from 'features/auth/hooks/useAuth';
 import moment from 'moment';
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Step from '@mui/material/Step';
+import { Stack } from '@mui/material';
+import Paper from '@mui/material/Paper';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import Button from '@mui/material/Button';
+import Stepper from '@mui/material/Stepper';
+import StepLabel from '@mui/material/StepLabel';
+import Typography from '@mui/material/Typography';
+import StepContent from '@mui/material/StepContent';
+
 import InfoForm from './InfoForm';
+import { roleApi } from 'api/roleApi';
+import useAuth from 'features/auth/hooks/useAuth';
+import { authActions } from 'features/auth/authSlice';
+import SelectCategory from 'components/SelectField/SelectCategory';
+import { ROLE_LOCAL_STORAGE_LABEL, ROLE_MEMBER_STRING } from 'app/constant';
 
 const steps = [
   {
@@ -43,9 +42,8 @@ const SignUpForm = () => {
   const [selectedRole, setSelectedRole] = React.useState(null);
   const [roles, setRoles] = React.useState([]);
   const registerData = React.useRef(null);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const infoFormValues = {
+  const initialInfoFormValues = {
     nickname: '',
     email: '',
     password: '',
@@ -54,6 +52,7 @@ const SignUpForm = () => {
     phone: '',
     gender: 'female',
   };
+  const infoFormValues = JSON.parse(localStorage.getItem('form-values')) ?? initialInfoFormValues;
 
   React.useEffect(() => {
     (async () => {
@@ -61,6 +60,10 @@ const SignUpForm = () => {
       setRoles(response.data);
       localStorage.setItem(ROLE_LOCAL_STORAGE_LABEL, JSON.stringify(response.data));
     })();
+
+    return () => {
+      localStorage.removeItem('form-values');
+    };
   }, []);
 
   const handleNext = (formValues) => {
@@ -88,8 +91,8 @@ const SignUpForm = () => {
         ...registerData.current,
         categories,
       };
-
       registerData.current.birthday = moment(registerData.current.birthday).format();
+      console.log({ registerData: registerData.current });
       dispatch(authActions.signUpWithPasswordAsync(registerData.current));
     } catch (error) {
       console.log(error);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import * as yup from 'yup';
 import Radio from '@mui/material/Radio';
 import FormLabel from '@mui/material/FormLabel';
@@ -22,7 +22,7 @@ const schema = yup.object().shape({
     .required(),
   birthday: yup.date().required(),
   phone: yup.string().required(),
-  gender: yup.string().oneOf(['female', 'male', 'others']),
+  gender: yup.string().oneOf(['female', 'male', 'other']),
   active_role: yup.string().oneOf([ROLE_LISTENER_STRING, ROLE_MEMBER_STRING]),
 });
 
@@ -32,15 +32,22 @@ const InfoForm = ({ defaultValues, handleNext }) => {
     control,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm({
     defaultValues,
     resolver: yupResolver(schema),
   });
+  const formValues = watch();
+  useEffect(() => {
+    localStorage.setItem('form-values', JSON.stringify(formValues));
+  }, [formValues]);
+
   const onSubmit = (formValues) => {
     if (formValues) {
       handleNext(formValues);
     }
   };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack direction='column' spacing={2} sx={{ width: '100%' }}>
@@ -103,6 +110,7 @@ const InfoForm = ({ defaultValues, handleNext }) => {
               <DatePicker
                 label='Ngày sinh'
                 value={birthday}
+                inputFormat='DD/MM/yyyy'
                 onChange={(newValue) => {
                   console.log(newValue);
                   setBirthday(newValue);
