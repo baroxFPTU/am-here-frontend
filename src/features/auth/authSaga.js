@@ -32,8 +32,11 @@ function* signUpWithPasswordAsync(action) {
       uid: firebaseResponse.user.uid,
       nickname: user.nickname,
       email: user.email,
+      phone: user.phone,
       role_id: user.role_id,
       categories: user.categories,
+      gender: user.gender,
+      birthday: user.birthday,
     });
     console.log({ response });
     yield put(authActions.signInWithPasswordAsyncSuccess(response.data));
