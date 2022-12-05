@@ -6,10 +6,12 @@ const Section = ({ header, children, bgColor, bgImage }) => {
   return (
     <Styled.Section bgColor={bgColor} bgImage={bgImage}>
       <Container>
-        <div className='section-header'>
-          <h2>{header.title}</h2>
-          <p>{header.subtitle}</p>
-        </div>
+        {header && (
+          <div className='section-header'>
+            <h2>{header.title}</h2>
+            <p>{header.subtitle}</p>
+          </div>
+        )}
         {children}
       </Container>
     </Styled.Section>

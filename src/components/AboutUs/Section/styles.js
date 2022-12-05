@@ -49,10 +49,21 @@ export const Section = styled.section`
 
 export const AboutSection = styled.div`
   display: flex;
-  align-items: center;
+  align-items: stretch;
   column-gap: 7rem;
   & > div {
     flex: 1;
+  }
+
+  .left {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+  }
+
+  p {
+    line-height: 1.5;
+    margin-bottom: 12px;
   }
 
   img {
