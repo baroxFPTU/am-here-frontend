@@ -4,15 +4,17 @@ import AboutSection from 'components/AboutUs/Section/AboutSection';
 import FeedbackSection from 'components/AboutUs/FeedbackSection/component';
 import React from 'react';
 import ServiceSection from 'components/AboutUs/ServiceSection/component';
+import IntroSection from 'components/AboutUs/Section/IntroSection';
 
 const AboutUs = () => {
   return (
     <>
+      <IntroSection />
       <Section
-        header={{
-          title: 'Về AMHERE',
-          subtitle: 'Chia sẻ và lắng nghe là giá trị cốt lõi của tổ chức chúng tôi',
-        }}
+      // header={{
+      //   title: 'Về AMHERE',
+      //   subtitle: 'Chia sẻ và lắng nghe là giá trị cốt lõi của tổ chức chúng tôi',
+      // }}
       >
         <AboutSection />
       </Section>
